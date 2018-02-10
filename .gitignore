@@ -1,0 +1,8 @@
+# ignore all the file end with "~"
+*~
+
+# ignore all the file end with ".o"
+*.o
+
+# ignore all the file in the test directory
+test/
