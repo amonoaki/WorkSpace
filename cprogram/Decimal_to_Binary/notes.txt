@@ -1,0 +1,6 @@
+The shortage of this program:
+    When convert Decimal to Binary, if the number is too large, the program will
+out of work.
+    When convert Binary to Decimal, if the number is too long, of course, it
+will be sheared.
+    In fact, the large number will not be met in our daily life frequently.
