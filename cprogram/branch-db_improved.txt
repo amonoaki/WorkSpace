@@ -1,3 +1,0 @@
-!!!You can see this file, because you are in a branch of master named
-   "db_improved".
-!!!I save this file to remind you.
