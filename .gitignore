@@ -4,5 +4,8 @@
 # ignore all the file end with ".o"
 *.o
 
+# ignore all the file begin with "."
+.*
+
 # ignore all the file in the test directory
 test/
