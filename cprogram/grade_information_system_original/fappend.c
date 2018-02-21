@@ -14,4 +14,7 @@ void fappend(STU *p)
             break;
         }
     }
+    while (getchar() != '\n') {
+        ;
+    }
 }

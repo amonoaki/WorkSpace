@@ -18,4 +18,5 @@ int fdelete(STU *p)
 
         fsort(p);
 	}
+	return 0;
 }

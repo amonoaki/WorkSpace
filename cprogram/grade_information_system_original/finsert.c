@@ -10,4 +10,7 @@ void finsert(STU *p)
 			break;
 		}
 	}
+	while (getchar() != '\n') {
+		;
+	}
 }
