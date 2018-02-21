@@ -20,3 +20,8 @@ int fdelete(STU *p)
 	}
 	return 0;
 }
+
+/*
+增加 按其他方式删除 功能 ---->  与 ffind() 结合， 因此改造 ffind() 即可
+
+*/
