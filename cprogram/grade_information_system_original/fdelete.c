@@ -8,11 +8,14 @@ int fdelete(STU *p)
         i = ffind(p, name1);
         if (i == -1)
             return 0;
-        (p + i)->grade = 0;
+        (p + i)->SUB_ONE = 0;
+	    (p + i)->SUB_TWO = 0;
+	    (p + i)->SUB_THREE = 0;
+	    (p + i)->total = 0;
+	    (p + i)->aver = 0;
         strcpy((p + i)->id, "\0");
         strcpy((p + i)->name, "\0");
-        strcpy((p + i)->clas, "\0");
-        strcpy((p + i)->tel, "\0");
+
         fsort(p);
 	}
 }
