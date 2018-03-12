@@ -15,8 +15,10 @@ int main (void)
 
     getData(n, data);  //get the number of the determinant from keyboard or one file 
     flag = preProcess(n, data);  //make sure that the first number of the first line is not zero, or the next process will be interrupt
-    process(n, data);  //process the data in the determinant, after this you can get a simple determinant
-    product = getResult(n, data);  //calculate the result of the determinant
+    if (flag != 0) {
+        process(n, data);  //process the data in the determinant, after this you can get a simple determinant
+        product = getResult(n, data);  //calculate the result of the determinant
+    }
     product *= flag;
     showResult(product, n, data);  //show the processed determinant and the final result
     
@@ -52,6 +54,9 @@ int preProcess(int n, double data[n][n])
             temp = i;
             break;
         } else {
+            if (i == n - 1) {
+                return 0;
+            }
             continue;
         }
     }
