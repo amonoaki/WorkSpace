@@ -15,18 +15,23 @@ cv2.waitKey(0)
 cv2.destroyAllWindows()
 """
 
+g_element_size = 0
+frame = 0
+
 def callBack(x):
-  pass
+    element = cv2.getStructuringElement(cv2.MORPH_RECT, (2 * g_element_size +1, 2 * g_element_size +1))
+    dstImage = cv2.erode(frame, element)
+    cv2.imshow("frame", dstImage)
 
 capture = cv2.VideoCapture(0)
 
 while(True):
-  ret, frame = capture.read()
-  cv2.namedWindow("frame")
-  cv2.createTrackbar("Tracbar", "frame", 0, 10, callBack)
-  cv2.imshow("frame", frame)
-  if cv2.waitKey(1) == ord('q'):
-    break
+    ret, frame = capture.read()
+    cv2.namedWindow("frame")
+    cv2.createTrackbar("Tracbar", "frame", 0, 10, callBack)
+    callBack(0)
+    if cv2.waitKey(1) == ord('q'):
+        break
 capture.release()
 cv2.destroyAllWindows()
   

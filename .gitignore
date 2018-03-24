@@ -9,3 +9,6 @@
 
 # ignore all the file in the test directory
 test/
+
+#ignore all the file end with ".exe"
+*.exe
