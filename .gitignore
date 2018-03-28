@@ -12,3 +12,6 @@ test/
 
 #ignore all the file end with ".exe"
 *.exe
+
+#ignore all the file end with ".class"
+*.class
