@@ -5,5 +5,5 @@ public class Test
         NotePad notepad = new NotePad(2.2, 1, 32, 3000, 10);
         System.out.println(pc.getDetails());
         System.out.println(notepad.getDetails());
-    }
+   }
 }
