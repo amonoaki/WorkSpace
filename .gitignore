@@ -15,3 +15,6 @@ test/
 
 #ignore all the file end with ".class"
 *.class
+
+#ignore all the file end with ".zip"
+*.zip
