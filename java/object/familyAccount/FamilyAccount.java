@@ -1,3 +1,4 @@
+package familyAccount;
 import java.util.Scanner;
 
 public class FamilyAccount
