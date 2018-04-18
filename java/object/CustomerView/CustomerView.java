@@ -1,19 +1,24 @@
 package CustomerView;
 import java.util.Scanner;
 
+/*主类*/
+
 public class CustomerView
 {
     CustomerList customers = new CustomerList(10);
     Scanner scanner = new Scanner(System.in);
 
+    //main方法，取得自身类的一个实例，调用实质上的主方法enterMainMenu()
     public static void main(String[] args) {
         CustomerView init = new CustomerView();
         init.enterMainMenu();
     }
 
+    //实质上的主方法
     public void enterMainMenu() {
         int option;
-        
+        boolean loopFlag = false;
+
         do {
             System.out.print("-----------------客户信息管理软件----------------- \n\n" +
             "                  1 添 加 客 户\n" +
@@ -22,32 +27,22 @@ public class CustomerView
             "                  4 客 户 列 表\n" +
             "                  5 退       出\n\n" +
             "                  请选择(1-5)：");
-            if (scanner.hasNextInt()) {
-                option = scanner.nextInt();
-            } else {
-                scanner.nextLine();
-                option = 0;
-            }
+            option = readInt(true);
             switch (option) {
-                case 1: addNewCustomer(); break;
-                case 2: modifyCustomer(); break;
-                case 3: deleteCustomer(); break;
-                case 4: listAllCustomers(); break;
-                case 5: 
-                        System.out.print("确认是否退出(Y/N) : ");
-                        String temp = scanner.next();
-                        if (temp.equals("Y") || temp.equals("y")) {
-                            System.out.println("已退出。"); 
-                            break;
-                        } else {
-                            option = 0;
-                            break;
-                        }
-                default: System.out.println("选项错误，请重试。"); break;
+                case 1: addNewCustomer(); break;    //增加客户
+                case 2: modifyCustomer(); break;    //修改客户
+                case 3: deleteCustomer(); break;    //删除客户
+                case 4: listAllCustomers(); break;  //打印客户列表
+                case 5: System.out.print("确认是否退出(Y/N) : ");
+                        loopFlag = forSure();  //获得用户选择，为Y/y返回true；否则返回false
+                        break;
+                default: System.out.println("没有此选项，请重试。"); break;
             }
-        } while (option != 5);
+        } while (!loopFlag);  //loopFlag为 假 时循环继续
+        System.out.println("已退出。");
     }
 
+    //增加客户
     private void addNewCustomer() {
         Customer customer = new Customer();
 
@@ -58,11 +53,7 @@ public class CustomerView
         System.out.print("性别：");
         customer.setGender(scanner.next());
         System.out.print("年龄：");
-        if (scanner.hasNextInt()) {
-            customer.setAge(scanner.nextInt());
-        } else {
-            scanner.next();
-        }
+        customer.setAge(readInt(true));
         System.out.print("电话：");
         customer.setPhone(scanner.next());
         System.out.print("邮箱：");
@@ -75,61 +66,75 @@ public class CustomerView
         }
     }
 
+    //修改客户
     private void modifyCustomer() {
         Customer customer = new Customer();
         int index;
 
         System.out.println("---------------------修改客户--------------------- ");
         System.out.print("请选择待修改客户编号(-1退出)：");
-        if (( index = scanner.nextInt() - 1 ) != -2) {
+        if (( index = readInt(false) - 1 ) != -2) {    //当用户输入-1，即索引index为-2时，不修改
             scanner.nextLine();
-
             String temp;
-            Customer originalCustomer = customers.getCustomer(index);
-            
-            System.out.print("姓名(" + originalCustomer.getName() + "):");
-            temp = scanner.nextLine();
-            if (temp.equals("")) {
-                customer.setName(originalCustomer.getName());
-            } else {
-                customer.setName(temp);
-            }
-
-            System.out.print("性别(" + originalCustomer.getGender() + "):");
-            temp = scanner.nextLine();
-            if (temp.equals("")) {
-                customer.setGender(originalCustomer.getGender());
-            } else {
-                customer.setGender(temp);
-            }
-
-            System.out.print("年龄(" + originalCustomer.getAge() + "):");
-            temp = scanner.nextLine();
-            if (temp.equals("")) {
-                customer.setAge(originalCustomer.getAge());
-            } else {
-                try {
-                    customer.setAge(Integer.parseInt(temp));
-                } catch (NumberFormatException e){
-                    System.out.println("(数据异常，不是整数，此项未修改。)");
-                    customer.setAge(originalCustomer.getAge());
+            Customer originalCustomer;
+            if (customers.getCustomer(index) != null) {
+                //只有当返回的不是空对象时才进行修改操作，
+                //返回空对象说明编号无效，在else处打印提示
+                originalCustomer = customers.getCustomer(index);            
+                System.out.print("姓名(" + originalCustomer.getName() + "):");
+                temp = scanner.nextLine();
+                if (temp.equals("")) {
+                    customer.setName(originalCustomer.getName());
+                } else {
+                    customer.setName(temp);
                 }
-            }
 
-            System.out.print("电话号码(" + originalCustomer.getPhone() + "):");
-            temp = scanner.nextLine();
-            if (temp.equals("")) {
-                customer.setPhone(originalCustomer.getPhone());
-            } else {
-                customer.setPhone(temp);
-            }
+                System.out.print("性别(" + originalCustomer.getGender() + "):");
+                temp = scanner.nextLine();
+                if (temp.equals("")) {
+                    customer.setGender(originalCustomer.getGender());
+                } else {
+                    customer.setGender(temp);
+                }
 
-            System.out.print("电子邮箱(" + originalCustomer.getEmail() + "):");
-            temp = scanner.nextLine();
-            if (temp.equals("")) {
-                customer.setEmail(originalCustomer.getEmail());
+                System.out.print("年龄(" + originalCustomer.getAge() + "):");
+                temp = scanner.nextLine();
+                int age;
+                if (temp.equals("")) {
+                    customer.setAge(originalCustomer.getAge());
+                    //此部分修改年龄的代码还没处理好，显得啰嗦。
+                } else {
+                    try {
+                        age = Integer.parseInt(temp);
+                        if (age > 0) {
+                            customer.setAge(age);
+                        } else {
+                            System.out.println("检测到负数，此项未修改。");
+                            customer.setAge(originalCustomer.getAge());
+                        }
+                    } catch(NumberFormatException e) {
+                        System.out.println("检测到非数字字符，此项未修改。");
+                        customer.setAge(originalCustomer.getAge());
+                    }
+                }
+
+                System.out.print("电话号码(" + originalCustomer.getPhone() + "):");
+                temp = scanner.nextLine();
+                if (temp.equals("")) {
+                    customer.setPhone(originalCustomer.getPhone());
+                } else {
+                    customer.setPhone(temp);
+                }
+
+                System.out.print("电子邮箱(" + originalCustomer.getEmail() + "):");
+                temp = scanner.nextLine();
+                if (temp.equals("")) {
+                    customer.setEmail(originalCustomer.getEmail());
+                } else {
+                    customer.setEmail(temp);
+                }
             } else {
-                customer.setEmail(temp);
+                System.out.println("编号无效，请重试");
             }
 
             if (customers.replaceCustomer(index, customer)) {
@@ -138,16 +143,16 @@ public class CustomerView
         }
     }
 
+    //删除客户
     private void deleteCustomer() {
         int index;
 
         System.out.println("---------------------删除客户---------------------");
         System.out.print("请选择待删除客户编号(-1退出)：");
-        if (( index = scanner.nextInt() - 1) != -2) {
+        if (( index = readInt(false) - 1) != -2) {      //当用户输入-1，即索引index为-2时，不删除
             String temp;
             System.out.print("确认是否删除(Y/N)：");
-            temp = scanner.next();
-            if (temp.equals("Y") || temp.equals("y")) {
+            if (forSure()) {
                 if (customers.deleteCustomer(index)) {
                     System.out.println("---------------------删除完成---------------------");
                 }
@@ -155,6 +160,7 @@ public class CustomerView
         }
     }
 
+    //打印客户列表
     private void listAllCustomers() {
         Customer[] allCustomers = new Customer[10];
         allCustomers = customers.getAllCustomers();
@@ -169,6 +175,34 @@ public class CustomerView
         }
         System.out.println("---------------------------客户列表完成---------------------");
     }
-}
 
-//将输入重整为一个方法，解决年龄无法跳过的问题。
+    //确保获得规范的整数输入
+    public int readInt(boolean optionFlag) {
+        int input = 0;
+        while(scanner.hasNext()) {
+            try {
+                input = Integer.parseInt( scanner.next() );
+                if (optionFlag && input < 0) {
+                    //当功能开关打开，即optionFlag为true时，此代码块执行，否则不执行
+                    System.out.print("输入不能为负，请重试：");
+                }
+                else {
+                    break;
+                }
+            } catch(NumberFormatException e) {
+                System.out.print("输入应为数字，请重试:");
+            }
+        }
+        return input;
+    }
+
+    //确认用户选择，Y/N
+    public boolean forSure() {
+        String temp = scanner.next();
+        if (temp.equals("Y") || temp.equals("y")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}

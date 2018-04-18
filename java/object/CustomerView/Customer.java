@@ -1,13 +1,17 @@
 package CustomerView;
 
+/*客户类*/
+
 public class Customer
 {
+    //属性
     private String name;
     private String gender;
     private int age;
     private String phone;
     private String email;
 
+    //构造方法
     public Customer() {}
     public Customer(String name, String gender, int age, String phone, String email) {
         this.name = name;
@@ -17,6 +21,7 @@ public class Customer
         this.email = email;
     }
 
+    //get/set方法
     public void setName(String name) {
         this.name = name;
     }
