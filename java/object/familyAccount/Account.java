@@ -1,4 +1,4 @@
-package familyAccount;
+package FamilyAccount;
 
 public class Account
 {
@@ -20,11 +20,12 @@ public class Account
         return details;
     }
 
+    //处理收入
     public void incomeProcess(double income, String document) {
         balance += income;
         details = details.append("收入\t" + balance + "\t\t" + income + "\t\t" + document + "\n");
     }
-
+    //处理支出
     public void spendingProcess(double spending, String document) {
         balance -= spending;
         details = details.append("支出\t" + balance + "\t\t" + spending + "\t\t" + document + "\n");

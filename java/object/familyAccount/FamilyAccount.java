@@ -1,4 +1,4 @@
-package familyAccount;
+package FamilyAccount;
 import java.util.Scanner;
 
 public class FamilyAccount
@@ -6,34 +6,41 @@ public class FamilyAccount
     Scanner scanner = new Scanner(System.in);
     Account account = new Account(10000);
 
+    //main方法，取得所在类的一个实例，调用实质上的主方法，程序开始
     public static void main(String[] args) {
         FamilyAccount unit = new FamilyAccount();
         unit.mainMenu();
     }
-
+    
+    /*实质上的主方法，统领其余方法*/
     public void mainMenu() {
         int option;
         boolean loopFlag = true;
-
+        
+        //loopFlag为假时循环结束
         while(loopFlag == true) {
+            //显示菜单及输入提示
             menu();
+            //获取用户输入的选项
             if (scanner.hasNextInt()) {
                 option = scanner.nextInt();
             } else {
                 scanner.next();
                 option = -1;
             }
+            //根据选项进行相应操作
             switch(option) {
-                case 1: System.out.println(account.getDetails()); break;
-                case 2: income(); break;
-                case 3: spending(); break;
-                case 4: loopFlag = quit(); break;
+                case 1: System.out.println(account.getDetails()); break;  //直接调用getDetails()方法输出明细
+                case 2: income(); break;          //导向income()方法，处理收入
+                case 3: spending(); break;        //导向spending()方法，处理支出
+                case 4: loopFlag = quit(); break; //quit()方法根据用户输入返回布尔值, 将其赋给loopFlag
                 default: System.out.println("需要一个选项(1-4)，请重试。"); break;
             }
         }
-        System.out.println("已退出。");
+        System.out.println("已退出。");  //程序成功退出的提示
     }
 
+    //打印菜单
     public void menu() {
         System.out.println("-----------------家庭收支记账软件-----------------");
         System.out.println();
@@ -45,28 +52,31 @@ public class FamilyAccount
         System.out.print("        请选择(1-4)：");
     }
 
+    //处理收入
     public void income() {
         double money = 0;
         String document;
 
         System.out.print("本次收入金额：");
-        money = readDouble(false);  //布尔值为此方法内部一个功能的开关
+        money = readDouble(false);  //方法参数为此方法内部一个功能的开关，此处关闭
         System.out.print("本次收入说明：");
         document = readString(); 
         account.incomeProcess(money, document);
     }
 
+    //处理支出
     public void spending() {
         double money;
         String document;
 
         System.out.print("本次支出金额：");
-        money = readDouble(true);
+        money = readDouble(true);  //功能开关打开
         System.out.print("本次支出说明：");
         document = readString();
         account.spendingProcess(money, document);
     }
 
+    //判断是否退出，是则返回false
     public boolean quit() {
         String temp;
 
@@ -79,6 +89,7 @@ public class FamilyAccount
         }
     }
 
+    //确保获得规范的金额输入
     public double readDouble(boolean optionFlag) {
         double money = 0;
         while(scanner.hasNext()) {
@@ -88,7 +99,7 @@ public class FamilyAccount
                     System.out.print("金额不能为负，请重试：");
                 }
                 else if (optionFlag && money > account.getBalance()) {
-                //如果optionFlag为真，则执行此代码块，判断输入的金额是否大于余额
+                //如果optionFlag为真，则执行此代码块，判断输入的金额是否大于余额，否则此代码块不执行
                     System.out.print("金额不能为超出账户余额，请重试：");
                 }
                 else {
@@ -101,6 +112,7 @@ public class FamilyAccount
         return money;
     }
 
+    //确保获得规范的明细输入
     public String readString() {
         String document = "";
         while(scanner.hasNext()) {
