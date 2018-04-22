@@ -37,10 +37,14 @@ public class CustomerList
     //如果索引index越界，不删除，返回false
     public boolean deleteCustomer(int index) {
         if (index >= 0 && index < customers.length) {
+            if (customers[index] == null || customers[index] == null) {
+                return false;
+            }
             for (int i = index; i < customers.length - 1; i++) {
                 customers[i] = customers[i + 1];
             }
-            total -= 1;
+            customers[total - 1] = null;  //循环是单纯将元素前移，此时最后一个位置的数据还在，因此将此位置置空，
+            total -= 1;                   //无论删除的是否为最后一个元素，将最后一个元素置空即可解决问题。
             return true;
         } else {
             return false;
