@@ -24,7 +24,6 @@ public class CMUtility
                 System.out.print("输入应为数字，请重试:");
             }
         }
-        //scanner.nextLine();
         return input;
     }
 
