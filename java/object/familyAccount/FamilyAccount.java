@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class FamilyAccount
 {
     Scanner scanner = new Scanner(System.in);
-    Account account = new Account(10000);
+    Utility account = new Utility(10000);
 
     //main方法，取得所在类的一个实例，调用实质上的主方法，程序开始
     public static void main(String[] args) {

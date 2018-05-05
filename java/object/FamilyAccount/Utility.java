@@ -1,14 +1,14 @@
 package FamilyAccount;
 
-public class Account
+public class Utility
 {
     private double balance;
     private StringBuffer details = new StringBuffer("收支\t账户金额\t收支金额\t说  明\n");
 
-    public Account() {
+    public Utility() {
         this.balance = 0;
     }
-    public Account(double balance) {
+    public Utility(double balance) {
         this.balance = balance;
     }
 
