@@ -1,3 +1,7 @@
+/*
+ * 功能：计算行列式的值
+ * 作者：祯
+ * */
 #include <stdio.h>
 
 void getData(int n, double data[n][n]);
@@ -9,7 +13,7 @@ void showResult(double produce, int n, double data[n][n]);
 int main (void) 
 {
     int n = 0, flag = 1;
-    printf("Please enter the size of the determinant: ");
+    printf("请输入行列式的阶数: ");
     scanf("%d", &n);
     double data[n][n], product = 0;
 
@@ -28,7 +32,7 @@ int main (void)
 void getData(int n, double data[n][n])
 {
     int i, j;
-    printf("Please enter the data of determinant:\n");
+    printf("请输入行列式:\n");
     for (i = 0; i < n; i++) {
         for (j = 0; j < n; j++) {
             scanf("%lf", &data[i][j]);
@@ -44,6 +48,7 @@ void exchange(int n, double array1[n], double array2[n])
     }
 }
 
+//确保首行首元素不为零
 int preProcess(int n, double data[n][n])
 {
     int i, temp = 0, flag = 1;
@@ -68,6 +73,7 @@ int preProcess(int n, double data[n][n])
     }
     return flag;
 }
+
 void process(int n, double data[n][n])
 {
     int i, j, k;
@@ -95,12 +101,12 @@ double getResult(int n, double data[n][n])
 void showResult(double product, int n, double data[n][n])
 {
     int i, j;
-    printf("\nYou can get this determinant:\n");
+    printf("\n上三角行列式:\n");
     for (i = 0; i < n; i++) {
         for (j = 0; j < n; j++) {
             printf("%7.3f ", data[i][j]);
         }
         putchar('\n');
     }
-    printf("\nThe result is: %.3f \n", product);
+    printf("\n行列式的值: %.3f \n", product);
 }
