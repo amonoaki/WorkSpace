@@ -1,38 +1,38 @@
 /*
- * åŠŸèƒ½ï¼šè®¡ç®—è¡Œåˆ—å¼çš„å€¼
- * ä½œè€…ï¼šç¥¯
+ * ¹¦ÄÜ£º¼ÆËãĞĞÁĞÊ½µÄÖµ
+ * ×÷Õß£ºìõ
  * */
 #include <stdio.h>
 
 void getData(int n, double data[n][n]);
 int preProcess(int n, double data[n][n]);
-void process(int n, double data[n][n]);
+int process(int n, double data[n][n]);
 double getResult(int n, double data[n][n]);
 void showResult(double produce, int n, double data[n][n]);
 
-int main (void) 
+int main (void)
 {
     int n = 0, flag = 1;
-    printf("è¯·è¾“å…¥è¡Œåˆ—å¼çš„é˜¶æ•°: ");
+    printf("ÇëÊäÈëĞĞÁĞÊ½µÄ½×Êı: ");
     scanf("%d", &n);
     double data[n][n], product = 0;
 
-    getData(n, data);  //get the number of the determinant from keyboard or one file 
+    getData(n, data);  //get the number of the determinant from keyboard or one file
     flag = preProcess(n, data);  //make sure that the first number of the first line is not zero, or the next process will be interrupt
     if (flag != 0) {
-        process(n, data);  //process the data in the determinant, after this you can get a simple determinant
+        flag = process(n, data);  //process the data in the determinant, after this you can get a simple determinant
         product = getResult(n, data);  //calculate the result of the determinant
     }
     product *= flag;
     showResult(product, n, data);  //show the processed determinant and the final result
-    
+
     return 0;
 }
 
 void getData(int n, double data[n][n])
 {
     int i, j;
-    printf("è¯·è¾“å…¥è¡Œåˆ—å¼:\n");
+    printf("ÇëÊäÈëĞĞÁĞÊ½:\n");
     for (i = 0; i < n; i++) {
         for (j = 0; j < n; j++) {
             scanf("%lf", &data[i][j]);
@@ -42,43 +42,67 @@ void getData(int n, double data[n][n])
 
 void exchange(int n, double array1[n], double array2[n])
 {
-    int i;
+    int i = 0;
+    double temp = 0;
+
     for (i = 0; i < n; i++) {
+        temp = array1[i];
         array1[i] = array2[i];
+        array2[i] = temp;
     }
 }
 
-//ç¡®ä¿é¦–è¡Œé¦–å…ƒç´ ä¸ä¸ºé›¶
+int rowSearch(int n, double array[n][n])
+{
+    int i = 0, j = 0, count = 0;
+
+    for (i = 0; i < n; i++) {
+        count = 0;
+        for (j = 0; j < n; j++) {
+            if (array[i][j] != 0) {
+                break;
+            }
+            count++;
+        }
+        if (count == n) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+//È·±£Ê×ĞĞÊ×ÔªËØ²»ÎªÁã
 int preProcess(int n, double data[n][n])
 {
     int i, temp = 0, flag = 1;
-    double tempArray[n];
 
     for (i = 0; i < n; i++) {
-        if (data[i][0] != 0) {
+        if (data[i][0] != 0) {  //Èç¹û¸ÃĞĞµÚÒ»¸öÔªËØ²»ÎªÁã£¬¼Ç×¡¸ÃĞĞµÄÎ»ÖÃ
             temp = i;
             break;
         } else {
-            if (i == n - 1) {
+            if (i == n - 1) {   //Èç¹ûÒÑµ½´ïÄ©ĞĞ¼´µÚÒ»ÁĞÈ«²¿ÔªËØ¶¼ÎªÁã£¬ĞĞÁĞÊ½ÎªÁã
                 return 0;
             }
-            continue;
+            continue;           //Ã»µ½×îºóÒ»ĞĞÔò¼ÌĞøÍùÏÂÕÒ
         }
     }
     if (temp != 0) {
-        exchange(n, tempArray, data[0]);
-        exchange(n, data[0], data[temp]);
-        exchange(n, data[temp], tempArray);
-        flag *= -1;
+        exchange(n, data[temp], data[0]);
+        flag *= -1;             //Ã¿½»»»Ò»´ÎĞĞÁĞÊ½±äºÅ
     }
     return flag;
 }
 
-void process(int n, double data[n][n])
+int process(int n, double data[n][n])
 {
     int i, j, k;
     double t;
+
     for (i = 0; i < n - 1; i++) {
+        if(rowSearch(n, data) != -1) {
+            return 0;
+        }
         for (j = i + 1; j < n; j++) {
             t = data[j][i] / data[i][i];
             for (k = i; k < n; k++) {
@@ -101,12 +125,12 @@ double getResult(int n, double data[n][n])
 void showResult(double product, int n, double data[n][n])
 {
     int i, j;
-    printf("\nä¸Šä¸‰è§’è¡Œåˆ—å¼:\n");
+    printf("\nÉÏÈı½ÇĞĞÁĞÊ½:\n");
     for (i = 0; i < n; i++) {
         for (j = 0; j < n; j++) {
             printf("%7.3f ", data[i][j]);
         }
         putchar('\n');
     }
-    printf("\nè¡Œåˆ—å¼çš„å€¼: %.3f \n", product);
+    printf("\nĞĞÁĞÊ½µÄÖµ: %.3f \n", product);
 }
