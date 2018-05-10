@@ -26,6 +26,10 @@ int main (void)
     product *= flag;
     showResult(product, n, data);  //show the processed determinant and the final result
 
+    printf("Press any key to continue...\n");
+    getchar();
+    getchar();
+
     return 0;
 }
 

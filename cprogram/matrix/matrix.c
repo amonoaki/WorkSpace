@@ -47,6 +47,10 @@ int main(void)
         printf("<无逆>\n");  //是方阵不是满秩无逆
     }
 
+    printf("Press any key to continue...\n");
+    getchar();
+    getchar();
+
     return 0;
 }
 
