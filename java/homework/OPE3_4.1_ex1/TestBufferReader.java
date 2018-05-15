@@ -1,9 +1,9 @@
 import java.io.*;
 
-public class TestFile
+public class TestBufferReader
 {
     public static void main(String[] args) {
-        File f = new File("TestFile.java");
+        File f = new File("TestBufferReader.java");
 
         try {
             BufferedReader fin = new BufferedReader(new FileReader(f));

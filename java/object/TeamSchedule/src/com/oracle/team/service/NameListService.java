@@ -61,6 +61,7 @@ public class NameListService {
 		return null;
 	}
 	
+	/*
 	public static void main(String[] args) {
 		NameListService util = new NameListService();
 		Employee[] allEmployees = util.getAllEmployees();
@@ -76,4 +77,5 @@ public class NameListService {
 		System.out.print("1-团队列表  2-添加团队成员  3-删除团队成员 4-退出   请选择(1-4)： _");
 		
 	}
+	*/
 }
