@@ -2,24 +2,26 @@ package com.oracle.team.domain;
 
 import com.oracle.team.service.Status;
 
-public class Programmer extends Employee {
-	
+public class Programmer extends Employee 
+{
 	private int memberId;
-	private Status status;
 	private Equipment equipment;
+	private Status status = Status.FREE;
 	
+	//1
+	public Programmer(int id, String name, int age, double salary,Equipment equipment) 
+	{
+		super(id, name, age, salary);
+		this.equipment=equipment;
+		// TODO Auto-generated constructor stub
+	}
+
+	//2
 	public int getMemberId() {
 		return memberId;
 	}
 	public void setMemberId(int memberId) {
 		this.memberId = memberId;
-	}
-
-	public Status getStatus() {
-		return status;
-	}
-	public void setStatus(Status status) {
-		this.status = status;
 	}
 
 	public Equipment getEquipment() {
@@ -28,16 +30,18 @@ public class Programmer extends Employee {
 	public void setEquipment(Equipment equipment) {
 		this.equipment = equipment;
 	}
-
-	public Programmer() {}
-	public Programmer(int id, String name, int age, double salary, Equipment equipment) {
-		super(id, name, age, salary);
-		this.setEquipment(equipment);
-	}
-
+	
+	public Status getStatus() {
+        return status;
+    }
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+	
+	//3
 	@Override
-	public String toString() {
-		return super.toString() + "\t" + "程序员" + "\t" + status + "\t\t\t" + equipment.getDescription();
-	}
-
+	public String toString() 
+	{
+		return getId()+"\t"+getName()+"\t"+getAge()+"\t"+getSalary()+"\t"+"程序员"+"\t"+"FREE"+"\t"+equipment.getDescription();
+	}	
 }

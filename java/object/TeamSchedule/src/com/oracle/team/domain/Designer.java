@@ -11,7 +11,6 @@ public class Designer extends Programmer {
 		this.bouns = bouns;
 	}
 	
-	public Designer() {}
 	public Designer(int id, String name, int age, double salary, Equipment equipment, double bouns) {
 		super(id, name, age, salary, equipment);
 		this.setBouns(bouns);
