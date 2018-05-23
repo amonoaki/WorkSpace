@@ -8,11 +8,13 @@ public class TeamView {
 	private NameListService listSvc = new NameListService();
 	//private TeamService teamSvc = new TeamService();
 	
+	/*
 	public static void main(String[] args) {
 		
 		TeamView util = new TeamView();
 		util.enterMainMenu();
 	}
+	*/
 	
 	public void enterMainMenu() {
 		

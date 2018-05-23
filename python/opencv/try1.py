@@ -7,14 +7,14 @@ Created on Thu Mar 22 16:33:46 2018
 
 import cv2
 
-"""
+
 img = cv2.imread("test.jpg")
 cv2.namedWindow("image")
 cv2.imshow("image", img)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-"""
 
+'''
 g_element_size = 0
 frame = 0
 
@@ -34,4 +34,4 @@ while(True):
         break
 capture.release()
 cv2.destroyAllWindows()
-  
+  '''

@@ -52,13 +52,16 @@ public class NameListService {
 		return employees;
 	}
 	
-	public Employee getEmployee(int id) {
-		for (int i = 0; i < 12; i++) {
+	public Employee getEmployee(int id) throws TeamException{
+		int i;
+		
+		for (i = 0; i < 12; i++) {
 			if (id == employees[i].getId()) {
 				return employees[i];
 			}
 		}
-		return null;
+		
+		throw new TeamException("该员工不存在");
 	}
 	
 	/*
