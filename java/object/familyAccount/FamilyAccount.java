@@ -1,10 +1,12 @@
 package FamilyAccount;
 import java.util.Scanner;
+import java.io.*;
 
 public class FamilyAccount
 {
     Scanner scanner = new Scanner(System.in);
     Utility account = new Utility(10000);
+    File file = new File("account_data.txt")
 
     //main方法，取得所在类的一个实例，调用实质上的主方法，程序开始
     public static void main(String[] args) {
