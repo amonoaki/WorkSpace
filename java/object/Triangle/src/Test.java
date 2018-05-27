@@ -1,4 +1,4 @@
-//测试类
+//6测试类
 public class Test {
 
 	public static void main(String[] args) {
@@ -17,7 +17,7 @@ public class Test {
 			if (triangle1.check2()) {
 				System.out.println("可以构成三角形");
 			}
-		} 
+		}
 		catch(MyFigureException e) {
 			System.out.println("捕获到自定义异常");
 			System.out.println(e);
@@ -29,5 +29,4 @@ public class Test {
 			System.out.println("程序正常退出");
 		}
 	}
-
 }

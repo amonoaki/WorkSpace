@@ -1,3 +1,4 @@
+//2œﬂ¿‡
 public class Line {
 
 	public Point p1, p2;
