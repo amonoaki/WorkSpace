@@ -57,7 +57,7 @@ if __name__ == '__main__':
         b -= r * db
 
     ##数据测试##
-    (trainimage_name, image_count, pixel_count, trainimage, trainlabel) = dataPreparation("0_1_test1")
+    (trainimage_name, image_count, pixel_count, trainimage, trainlabel) = dataPreparation("0_1_test1")  #test是学长给的测试图片，test1是我自己重新写的测试图片
     (trainimage, trainlabel) = getArray(trainimage_name, image_count, pixel_count, trainimage, trainlabel)
     #计算
     Z = np.dot(trainimage, W) + b  #Z.shape = (image_count, 1)
