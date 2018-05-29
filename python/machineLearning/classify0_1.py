@@ -62,11 +62,13 @@ def learning():
         r = 0.01
         W -= r * dW
         b -= r * db
+        
+        return (W, b)
 
-<<<<<<< HEAD
+'''
     ##数据测试##
-    (trainimage_name, image_count, pixel_count, trainimage, trainlabel) = dataPreparation("0_1_test1")
-    (trainimage, trainlabel) = getArray(trainimage_name, image_count, pixel_count, trainimage, trainlabel)
+    (trainimage_name, image_count, trainimage, trainlabel) = dataPreparation("0_1_test1")
+    (trainimage, trainlabel) = getArray(trainimage_name, image_count, trainimage, trainlabel)
     #计算
     Z = np.dot(trainimage, W) + b  #Z.shape = (image_count, 1)
     A = 1 / (1 + np.exp(-Z))  #a.shape = (image_count, 1)
@@ -76,9 +78,8 @@ def learning():
     print(trainlabel.T)
     print("预测值")
     print(A.T)
-=======
-    return (W, b)
->>>>>>> mylock0
+'''
+
 
 if __name__ == '__main__':
 
