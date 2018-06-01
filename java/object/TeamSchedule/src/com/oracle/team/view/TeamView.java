@@ -2,19 +2,20 @@ package com.oracle.team.view;
 
 import com.oracle.team.domain.Employee;
 import com.oracle.team.service.NameListService;
+import com.oracle.team.service.TeamService;
 
 public class TeamView {
 
 	private NameListService listSvc = new NameListService();
-	//private TeamService teamSvc = new TeamService();
+	private TeamService teamSvc = new TeamService();
 	
-	/*
+	
 	public static void main(String[] args) {
 		
 		TeamView util = new TeamView();
 		util.enterMainMenu();
 	}
-	*/
+	
 	
 	public void enterMainMenu() {
 		
