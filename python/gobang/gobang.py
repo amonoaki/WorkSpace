@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Feb  1 14:23:53 2018
+Created on Fri Feb  2 20:04:38 2018
 
 @author: 23755
 """
-"""
 
-边界棋子显示不全
-
-"""
 import tkinter as tk
 
 PIECE_SIZE = 10
@@ -16,8 +12,8 @@ PIECE_SIZE = 10
 click_x = 0
 click_y = 0
 
-pieces_x = [i for i in range(22, 513, 35)]
-pieces_y = [i for i in range(28, 519, 35)]
+pieces_x = [i for i in range(32, 523, 35)]
+pieces_y = [i for i in range(38, 529, 35)]
 
 coor_black = []
 coor_white = []
@@ -38,6 +34,7 @@ def pushMessage():
         var1.set("白棋赢")
     elif person_flag == 1:
         var1.set("黑棋赢")
+    var2.set("游戏结束")
 
 def piecesCount(coor, pieces_count, t1, t2):
     for i in range(1, 5):
@@ -53,13 +50,11 @@ def preJudge(piece_color):
         realJudge0(coor_black)
     elif piece_color == "white":
         realJudge0(coor_white)
-        
 
 def realJudge0(coor):
-    global person_flag
+    global person_flag, person_label
 
     if realJudge1(coor) == 1 or realJudge2(coor) == 1:
-        var.set("游戏结束")
         pushMessage()
         person_flag = 0
 
@@ -106,25 +101,38 @@ def putPiece(piece_color):
     preJudge(piece_color)
 
 def coorJudge():
+    global click_x, click_y
     coor = coor_black + coor_white
     global person_flag, show_piece
     #print("x = %s, y = %s" % (click_x, click_y))
-    if ( (click_x, click_y) not in coor )and( click_x in pieces_x )and( click_y in pieces_y ):
-        #print("True")
-        if person_flag != 0:
-            if person_flag == 1:
-                putPiece("black")
-                showChange("white")
-                var.set("执白棋")
-            elif person_flag == -1:
-                putPiece("white")
-                showChange("black")
-                var.set("执黑棋")
-            person_flag *= -1
+    item = canvas.find_closest(click_x, click_y)
+    tags_tuple = canvas.gettags(item)
+    if len(tags_tuple) > 1:
+        tags_list = list(tags_tuple)
+        coor_list = tags_list[:2]
+        try:
+            for i in range(len(coor_list)):
+                coor_list[i] = int(coor_list[i])
+        except ValueError:
+            pass
         else:
-            var.set("游戏结束")
-    #else:
-        #print("False")
+            coor_tuple = tuple(coor_list)
+            (click_x, click_y) = coor_tuple
+            #print("tags = ", tags_tuple, "coors = ", coor_tuple)
+            if ( (click_x, click_y) not in coor )and( click_x in pieces_x )and( click_y in pieces_y ):
+                #print("True")
+                if person_flag != 0:
+                    if person_flag == 1:
+                        putPiece("black")
+                        showChange("white")
+                        var.set("执白棋")
+                    elif person_flag == -1:
+                        putPiece("white")
+                        showChange("black")
+                        var.set("执黑棋")
+                    person_flag *= -1
+            #else:
+                #print("False")
 
 def coorBack(event):  #return coordinates of cursor 返回光标坐标
     global click_x, click_y
@@ -134,19 +142,20 @@ def coorBack(event):  #return coordinates of cursor 返回光标坐标
     
 def gameReset():
     global person_flag, coor_black, coor_white, piece_color
-    person_flag = 1
-    var.set("执黑棋")
-    var1.set("")
-    piece_color = "black"
-    canvas.delete("piece")
-    coor_black = []
-    coor_white = []
+    person_flag = 1       #打开落子开关
+    var.set("执黑棋")      #还原提示标签
+    var1.set("")          #还原输赢提示标签
+    var2.set("")          #还原游戏结束提示标签
+    showChange("black")   #还原棋子提示图片
+    canvas.delete("piece")#删除所有棋子
+    coor_black = []       #清空黑棋坐标存储器
+    coor_white = []       #清空白棋坐标存储器
     
 """窗口主体"""
 root = tk.Tk()
 
 root.title("Gobang")
-root.geometry("750x550")
+root.geometry("760x560")
 
 """棋子提示"""
 side_canvas = tk.Canvas(root, width = 220, height = 50)
@@ -166,7 +175,14 @@ var1 = tk.StringVar()
 var1.set("")
 result_label = tk.Label(root, textvariable = var1, width = 12, height = 4, 
                         anchor = tk.CENTER, fg = "red", font = ("Arial", 25) )
-result_label.grid(row = 2, column = 1, rowspan = 3)
+result_label.grid(row = 2, column = 1, rowspan = 2)
+
+"""游戏结束提示标签"""
+var2 = tk.StringVar()
+var2.set("")
+game_label = tk.Label(root, textvariable = var2, width = 12, height = 4, 
+                        anchor = tk.CENTER, font = ("Arial", 18) )
+game_label.grid(row = 4, column = 1)
 
 """重置按钮"""
 reset_button = tk.Button(root, text = "重新开始", font = 20, 
@@ -175,30 +191,37 @@ reset_button.grid(row = 5, column = 1)
 
 """棋盘绘制"""
 #背景
-canvas = tk.Canvas(root, bg = "saddlebrown", width = 530, height = 530)
+canvas = tk.Canvas(root, bg = "saddlebrown", width = 540, height = 540)
 canvas.bind("<Button-1>", coorBack)
 canvas.grid(row = 0, column = 0, rowspan = 6)
 #线条
 for i in range(15):
-    canvas.create_line(22, (35 * i + 28), 512, (35 * i + 28))
-    canvas.create_line((35 * i + 22), 28, (35 * i + 22), 518)
+    canvas.create_line(32, (35 * i + 38), 522, (35 * i + 38))
+    canvas.create_line((35 * i + 32), 38, (35 * i + 32), 528)
 #点
 point_x = [3, 3, 11, 11, 7]
 point_y = [3, 11, 3, 11, 7]
 for i in range(5):
-    canvas.create_oval(35 * point_x[i] + 18, 35 * point_y[i] + 23, 
-                       35 * point_x[i] + 26, 35 * point_y[i] + 31, fill = "black")
+    canvas.create_oval(35 * point_x[i] + 28, 35 * point_y[i] + 33, 
+                       35 * point_x[i] + 36, 35 * point_y[i] + 41, fill = "black")
+
+#透明棋子    
+for i in pieces_x:
+    for j in pieces_y:
+        canvas.create_oval(i - PIECE_SIZE, j - PIECE_SIZE,
+                           i + PIECE_SIZE, j + PIECE_SIZE,
+                           width = 0, tags = (str(i), str(j)))
 
 #数字坐标
 for i in range(15):
     label = tk.Label(canvas, text = str(i + 1), fg = "black", bg = "saddlebrown",
                      width = 2, anchor = tk.E)
-    label.place(x = 2, y = 35 * i + 18)
+    label.place(x = 2, y = 35 * i + 28)
 #字母坐标
 count = 0
 for i in range(65, 81):
     label = tk.Label(canvas, text = chr(i), fg = "black", bg = "saddlebrown")
-    label.place(x = 35 * count + 15, y = 2)
+    label.place(x = 35 * count + 25, y = 2)
     count += 1
 
 """窗口循环"""

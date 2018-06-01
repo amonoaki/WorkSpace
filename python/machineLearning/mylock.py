@@ -1,15 +1,17 @@
-#classify0_1.py
-
-print("Please wait...")
+#mylock.py
+#手写数字识别密码锁-神经网络-机器学习
 
 import os
 import numpy as np
 import cv2
 from PIL import Image
 
-drawing=False
+
 PIXEL_COUNT = 28 * 28
 NUMBER_COUNT = 10
+TRY_TIMES = 5
+PASSWARD = [2, 3, 5, 7]
+drawing=False
 
 
 def drawCircle(event,x,y,flags,param):
@@ -37,6 +39,7 @@ def arrayInitialize(dir_path):
 
     return (image_name, image_count, image, label)
 
+
 def getArray(image_name, image_count, image, label):
     '''获得训练数组和标签数组'''
     for i in range(image_count):
@@ -48,6 +51,7 @@ def getArray(image_name, image_count, image, label):
     image = np.where(image == 1, 0, 1)
 
     return (image, label)
+
 
 def learning():
     ##监督学习，训练参数##
@@ -86,6 +90,79 @@ def learning():
 
     return (W, b)
 
+
+if __name__ == '__main__':
+
+    #获得学习后的参数并加以存储
+    #(W, b) = learning()
+    #np.save("E:\\BISTU\\TeamWater\\water项目-手写密码锁\\第三周\\W", W)
+    #np.save("E:\\BISTU\\TeamWater\\water项目-手写密码锁\\第三周\\b", b)
+    #读取学习过的参数
+    W = np.load("E:\\BISTU\\TeamWater\\water项目-手写密码锁\\第三周\\W.npy")
+    b = np.load("E:\\BISTU\\TeamWater\\water项目-手写密码锁\\第三周\\b.npy")
+
+    #准备窗口与提示
+    img=np.zeros((280,280),np.uint8) + 255
+    cv2.namedWindow('Image')
+    cv2.setMouseCallback('Image',drawCircle)
+    print("c->clear  s->save  q->quit")
+
+    #开始写数字
+    for i in range(TRY_TIMES):
+        inputnumber_count = 0
+        passward = []
+        print("Draw your passward...")
+        while(True):
+            cv2.imshow('Image',img)
+            key=cv2.waitKey(1)&0xFF
+            if key==ord('s'):
+                img = cv2.resize(img, (28, 28))
+
+                #开始识别
+                img = np.array(img).reshape((1, PIXEL_COUNT))
+                img = np.where(img >= 127, 0, 1)
+                Z = np.dot(img, W) + b
+                temp0 = np.exp(Z)
+                temp1 = np.sum(np.exp(Z), 1)
+                A = temp0 / temp1
+                #每行概率最大的对应位置即为结果
+                predictlabel = A.argmax(1)
+                passward.append(predictlabel[0])
+
+                #完毕，初始化窗口，准备下一次循环
+                inputnumber_count += 1
+                print("%s number saved..." % (inputnumber_count))
+                img=np.zeros((280,280),np.uint8) + 255
+            elif key==ord('q'):
+                break
+            elif key==ord('c'):
+                img = np.zeros((280, 280), np.uint8) + 255
+            else:
+                pass
+
+        #print(passward)
+        #print(PASSWARD)
+        if (len(passward) == len(PASSWARD)):
+            count = 0
+            for i in range(len(PASSWARD)):
+                if (PASSWARD[i] == passward[i]):
+                    count += 1
+                else:
+                    break
+            if (count == len(PASSWARD)):
+                print("Correct! Enjoy your game!")
+                os.system("python E:\\WorkSpace\\python\\gobang\\gobang.py")
+                break
+            else:
+                print("Passwards do not match, try again.(%s chance(s) left)" % (TRY_TIMES-1 - i))
+        else:
+            print("Bad passwards, try again.(%s chance(s) left)" % (TRY_TIMES-1 - i))
+
+    print("Bye!")
+#end
+
+
+
 '''
 if __name__ == '__main__':
     ##批量数据测试##
@@ -112,64 +189,4 @@ if __name__ == '__main__':
         if testlabel[i][0] == predictlabel[i]:
             right_count += 1
     print("识别率:%s" % (right_count/image_count))
-'''
-
-
-if __name__ == '__main__':
-
-    #获得学习后的参数并加以存储
-    #(W, b) = learning()
-    #np.save("E:\\BISTU\\TeamWater\\water项目-手写密码锁\\第三周\\W", W)
-    #np.save("E:\\BISTU\\TeamWater\\water项目-手写密码锁\\第三周\\b", b)
-    #读取学习过的参数
-    W = np.load("E:\\BISTU\\TeamWater\\water项目-手写密码锁\\第三周\\W.npy")
-    b = np.load("E:\\BISTU\\TeamWater\\water项目-手写密码锁\\第三周\\b.npy")
-    print("Begin...")
-    #准备窗口与提示
-    img=np.zeros((280,280),np.uint8) + 255
-    cv2.namedWindow('Image')
-    cv2.setMouseCallback('Image',drawCircle)
-    print("c->clear  s->save  q->quit")
-    #开始写数字
-    image_count = 0
-    right_count = 0
-    print("Draw your number...")
-    while(True):
-        cv2.imshow('Image',img)
-        key=cv2.waitKey(1)&0xFF
-        if key==ord('s'):
-            print("Recognizing...",end='')
-            img = cv2.resize(img, (28, 28))
-
-            #开始识别
-            img = np.array(img).reshape((1, PIXEL_COUNT))
-            img = np.where(img >= 127, 0, 1)
-            Z = np.dot(img, W) + b
-            temp0 = np.exp(Z)
-            temp1 = np.sum(np.exp(Z), 1)
-            A = temp0 / temp1
-            #每行概率最大的对应位置即为结果
-            predictlabel = A.argmax(1)
-            #输出识别结果
-            print("It's ", end='')
-            print(predictlabel)
-
-            image_count += 1
-            if (int(input("right?(1-Yes/0-No): "))):
-                right_count += 1
-            #完毕，初始化窗口，准备下一次循环
-            img=np.zeros((280,280),np.uint8) + 255
-            print("Draw your number...")
-        elif key==ord('q'):
-            break
-        elif key==ord('c'):
-            img = np.zeros((280, 280), np.uint8) + 255
-        else:
-            pass
-
-    print("识别率:%s" % (right_count/image_count))
-
-
-'''1、调整参数，使识别率提升，不要用学长复制得到的测试数据集
-   2、拓展代码，将五子棋代码放置其中
 '''
