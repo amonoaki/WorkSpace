@@ -1,11 +1,10 @@
-package CustomerView;
 import java.util.Scanner;
 
 /*主类*/
 
 public class CustomerView
 {
-    CustomerList customers = new CustomerList(10);
+    CustomerList customers = new CustomerList(4);
     Scanner scanner = new Scanner(System.in);
 
     //main方法，取得自身类的一个实例，调用实质上的主方法enterMainMenu()
@@ -51,7 +50,7 @@ public class CustomerView
         System.out.print("姓名：");
         customer.setName(scanner.next());
         System.out.print("性别：");
-        customer.setGender(scanner.next());
+        customer.setGender(scanner.next().charAt(0));
         System.out.print("年龄：");
         customer.setAge(CMUtility.readInt(true));
         System.out.print("电话：");
@@ -96,7 +95,7 @@ public class CustomerView
                 if (temp.equals("")) {
                     customer.setGender(originalCustomer.getGender());
                 } else {
-                    customer.setGender(temp);
+                    customer.setGender(temp.charAt(0));
                 }
                 //修改年龄
                 System.out.print("年龄(" + originalCustomer.getAge() + "):");
@@ -154,7 +153,6 @@ public class CustomerView
         System.out.println("\n-------------------------删除客户-------------------------");
         System.out.print("请选择待删除客户编号(-1退出)：");
         if (( index = CMUtility.readInt(false) - 1) != -2) {      //当用户输入-1，即索引index为-2时，不删除
-            String temp;
             System.out.print("确认是否删除(Y/N)：");
             if (CMUtility.forSure()) {
                 if (customers.deleteCustomer(index)) {
@@ -163,22 +161,27 @@ public class CustomerView
                     System.out.println("该客户不存在，操作无效");
                 }
             } else {
-                System.out.println("未删除");
+                System.out.println("操作已取消");
             }
+        } else {
+        	System.out.println("操作取消，已返回上一层");
         }
     }
 
     //打印客户列表
     private void listAllCustomers() {
-        Customer[] allCustomers = new Customer[10];
-        allCustomers = customers.getAllCustomers();
+        Customer[] allCustomers = customers.getAllCustomers();
 
         System.out.println("\n-------------------------客户列表-------------------------\n");
         System.out.println("编号\t姓名\t性别\t年龄\t电话\t\t邮箱");
-        for (int i = 0; i < 10; i++) {
-            if (allCustomers[i] != null && allCustomers[i].getName() != null) {
-                System.out.println((i + 1) + "\t" + allCustomers[i].getName() + "\t"+ allCustomers[i].getGender() +
-                    "\t" + allCustomers[i].getAge() + "\t" + allCustomers[i].getPhone() + "\t" + allCustomers[i].getEmail());
+        int id = 0;
+        for (Customer cus : allCustomers) {
+        	id++;
+        	if (cus == null) {
+        		System.out.println("对象为空");
+        	}
+            if (cus != null && cus.getName() != null) {
+                System.out.println(id + "\t" + cus.toString());
             }
         }
         System.out.println("\n-----------------------客户列表完成-----------------------");

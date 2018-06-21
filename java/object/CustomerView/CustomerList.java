@@ -1,5 +1,3 @@
-package CustomerView;
-
 /*客户管理类*/
 
 public class CustomerList
@@ -53,11 +51,19 @@ public class CustomerList
 
     //返回整个数组
     public Customer[] getAllCustomers() {
-        return customers;
+    	Customer[] validCustomers = new Customer[total];
+    	for (int i = 0; i < total; i++) {
+    		validCustomers[i] = customers[i];
+    	}
+        return validCustomers;
     }
 
     //返回指定的数组元素
     public Customer getCustomer(int index) {
-        return customers[index];
+        if (index >= 0 && index < total) {
+            return customers[index];
+        } else {
+            return null;
+        }
     }
 }

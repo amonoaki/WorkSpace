@@ -1,4 +1,3 @@
-package CustomerView;
 import java.util.Scanner;
 
 /*工具类，规范用户输入*/

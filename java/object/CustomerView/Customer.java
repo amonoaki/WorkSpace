@@ -1,19 +1,17 @@
-package CustomerView;
-
 /*客户类*/
 
 public class Customer
 {
     //属性
     private String name;
-    private String gender;
+    private char gender;
     private int age;
     private String phone;
     private String email;
 
     //构造方法
     public Customer() {}
-    public Customer(String name, String gender, int age, String phone, String email) {
+    public Customer(String name, char gender, int age, String phone, String email) {
         this.name = name;
         this.gender = gender;
         this.age = age;
@@ -29,10 +27,10 @@ public class Customer
         return name;
     }
 
-    public void setGender(String gender) {
+    public void setGender(char gender) {
         this.gender = gender;
     }
-    public String getGender() {
+    public char getGender() {
         return gender;
     }
 
@@ -55,5 +53,9 @@ public class Customer
     }
     public String getEmail() {
         return email;
+    }
+    
+    public String toString() {
+    	return name + "\t"+ gender + "\t" + age + "\t" + phone + "\t" + email;
     }
 }
