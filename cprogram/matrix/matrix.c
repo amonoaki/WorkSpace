@@ -1,10 +1,10 @@
 /*
- * ¹¦ÄÜ£º¶Ô¾ØÕó½øĞĞ¸÷Ïî´¦Àí
- *       1¡¢½«ÈÎÒâ¾ØÕó×ª»»³É×î¼òĞÍ¾ØÕó
- *       2¡¢ÇóÖÈ
- *       3¡¢ÇóÄæ
- * ¾ÖÏŞ£ºÖ»ÄÜ´¦Àí²¿·Ö¾ßÓĞÏàÍ¬ĞĞµÄÇé¿ö
- * ×÷Õß£ºìõ
+ * åŠŸèƒ½ï¼šå¯¹çŸ©é˜µè¿›è¡Œå„é¡¹å¤„ç†
+ *       1ã€å°†ä»»æ„çŸ©é˜µè½¬æ¢æˆæœ€ç®€å‹çŸ©é˜µ
+ *       2ã€æ±‚ç§©
+ *       3ã€æ±‚é€†
+ * å±€é™ï¼šåªèƒ½å¤„ç†éƒ¨åˆ†å…·æœ‰ç›¸åŒè¡Œçš„æƒ…å†µ
+ * ä½œè€…ï¼šç¥¯
  * */
 
 #include <stdio.h>
@@ -20,31 +20,31 @@ void copyArray(int row, int column, double origin_arr[row][column], double targe
 int main(void)
 {
     int row = 0, column = 0, option = 0;
-    printf("ÇëÊäÈë ĞĞÊı: ");
+    printf("è¯·è¾“å…¥ è¡Œæ•°: ");
     scanf("%d", &row);
-    printf("ÇëÊäÈë ÁĞÊı: ");
+    printf("è¯·è¾“å…¥ åˆ—æ•°: ");
     scanf("%d", &column);
-    printf("ÊÇ·ñÕ¹¿ª²½Öè(1-ÊÇ, 0-·ñ)");
+    printf("æ˜¯å¦å±•å¼€æ­¥éª¤(1-æ˜¯, 0-å¦)");
     scanf("%d", &option);
 
     double data[row][column];
-    printf("\nÇëÊäÈë¾ØÕó(ÒÔ¿Õ¸ñ»ò»Ø³µ¼ä¸ô): \n");
+    printf("\nè¯·è¾“å…¥çŸ©é˜µ(ä»¥ç©ºæ ¼æˆ–å›è½¦é—´éš”): \n");
     getData(row, column, data);
 
     double cp_data[row][column];
     copyArray(row, column, data, cp_data);
 
     int rank = convert(row, column, data, option);
-    printf("¾ØÕóµÄÖÈÎª: %d\n", rank);
+    printf("çŸ©é˜µçš„ç§©ä¸º: %d\n", rank);
 
-    printf("×î¼òĞÎ¾ØÕóÎª:\n");
+    printf("æœ€ç®€å½¢çŸ©é˜µä¸º:\n");
     printArray(row, column, data);
 
-    printf("ÇóÄæ:\n");
+    printf("æ±‚é€†:\n");
     if (rank == row) {
-        inverse(row, column, cp_data, option);  //¾ØÕóÇóÄæÒªÓÃÔ­Ê¼Êı¾İ
+        inverse(row, column, cp_data, option);  //çŸ©é˜µæ±‚é€†è¦ç”¨åŸå§‹æ•°æ®
     } else {
-        printf("<ÎŞÄæ>\n");  //ÊÇ·½Õó²»ÊÇÂúÖÈÎŞÄæ
+        printf("<æ— é€†>\n");  //æ˜¯æ–¹é˜µä¸æ˜¯æ»¡ç§©æ— é€†
     }
 
     printf("Press any key to continue...\n");
@@ -54,7 +54,7 @@ int main(void)
     return 0;
 }
 
-//½»»»Ö¸¶¨µÄÁ½ĞĞÊı¾İ(ÄÚ²¿¹¦ÄÜº¯Êı)
+//äº¤æ¢æŒ‡å®šçš„ä¸¤è¡Œæ•°æ®(å†…éƒ¨åŠŸèƒ½å‡½æ•°)
 void exchange(int row, int column, double arr[row][column], int origin, int target)
 {
     int i = 0;
@@ -69,7 +69,7 @@ void exchange(int row, int column, double arr[row][column], int origin, int targ
     }
 }
 
-//½«¾ØÕóÊ×ĞĞÓëµÚÒ»Ìõ·ÇÁãĞĞ½»»»(ÄÚ²¿¹¦ÄÜº¯Êı)
+//å°†çŸ©é˜µé¦–è¡Œä¸ç¬¬ä¸€æ¡éé›¶è¡Œäº¤æ¢(å†…éƒ¨åŠŸèƒ½å‡½æ•°)
 void preConvert(int row, int column, double arr[row][column])
 {
     int i = 0, target = 0;
@@ -82,7 +82,7 @@ void preConvert(int row, int column, double arr[row][column])
     exchange(row, column, arr, 0, target);
 }
 
-//¼ì²âÊÇ·ñÓĞ·ÇÁãĞĞ£¬ÓĞÔò»»µ½ºóÃæ(ÄÚ²¿¹¦ÄÜº¯Êı)
+//æ£€æµ‹æ˜¯å¦æœ‰éé›¶è¡Œï¼Œæœ‰åˆ™æ¢åˆ°åé¢(å†…éƒ¨åŠŸèƒ½å‡½æ•°)
 int rowSearch(int row, int column, double arr[row][column])
 {
     int i = 0, j = 0, count = 0, count1 = 0;
@@ -97,7 +97,7 @@ int rowSearch(int row, int column, double arr[row][column])
             }
             if (count == column) {
                 exchange(row, column, arr, i, row-1-count1);
-                count1++;  //´ú±í¿ÕĞĞµÄÊıÁ¿
+                count1++;  //ä»£è¡¨ç©ºè¡Œçš„æ•°é‡
             }
         }
         break;
@@ -108,7 +108,7 @@ int rowSearch(int row, int column, double arr[row][column])
 }
 
 
-//»ñÈ¡¾ØÕóÊı¾İ
+//è·å–çŸ©é˜µæ•°æ®
 void getData(int row, int column, double arr[row][column])
 {
     int i = 0, j = 0;
@@ -120,18 +120,18 @@ void getData(int row, int column, double arr[row][column])
     }
 }
 
-//×ª»¯Îª×î¼òĞÎ
+//è½¬åŒ–ä¸ºæœ€ç®€å½¢
 int convert(int row, int column, double arr[row][column], int option)
 {
     int i = 0, j = 0, k = 0, count1 = 0;
     double rate = 0;
 
-    //Èç¹ûÊ×ĞĞµÚÒ»¸öÔªËØÎªÁã£¬Ôò½øĞĞÔ¤´¦Àí
+    //å¦‚æœé¦–è¡Œç¬¬ä¸€ä¸ªå…ƒç´ ä¸ºé›¶ï¼Œåˆ™è¿›è¡Œé¢„å¤„ç†
     if (arr[0][0] == 0) {
         preConvert(row, column, arr);
     }
 
-    //»¯ÎªÉÏÈı½Ç¾ØÕó
+    //åŒ–ä¸ºä¸Šä¸‰è§’çŸ©é˜µ
     for (i = 0; i < row - 1 - count1; i++) {
         for (j = i + 1; j < row; j++) {
             rate = arr[j][i] / arr[i][i];
@@ -142,14 +142,14 @@ int convert(int row, int column, double arr[row][column], int option)
         count1 = rowSearch(row, column, arr);
     }
     if (option == 1) {
-        printf("(»¯ÎªÉÏÈı½Ç¾ØÕó)\n");
+        printf("(åŒ–ä¸ºä¸Šä¸‰è§’çŸ©é˜µ)\n");
         printArray(row, column, arr);
     }
 
-    //ÇóÖÈ
+    //æ±‚ç§©
     int r = rank(row, column, arr);
 
-    //ÓÒÉÏÒ²»¯ÎªÁã
+    //å³ä¸Šä¹ŸåŒ–ä¸ºé›¶
     for (i = r - 1; i > 0; i--) {
         for (j = i - 1; j >= 0; j--) {
             rate = arr[j][i] / arr[i][i];
@@ -159,11 +159,11 @@ int convert(int row, int column, double arr[row][column], int option)
         }
     }
     if (option == 1) {
-        printf("(ÓÒÉÏÒ²»¯ÎªÁã)\n");
+        printf("(å³ä¸Šä¹ŸåŒ–ä¸ºé›¶)\n");
         printArray(row, column, arr);
     }
 
-    //½×Ìİ´¦È«²¿»¯Îª1
+    //é˜¶æ¢¯å¤„å…¨éƒ¨åŒ–ä¸º1
     for (i = 0; i < r; i++) {
         rate = 1 / arr[i][i];
         for (j = i; j < column; j++) {
@@ -171,7 +171,7 @@ int convert(int row, int column, double arr[row][column], int option)
         }
     }
     if (option == 1) {
-        printf("(½×Ìİ´¦È«²¿»¯Îª1)\n");
+        printf("(é˜¶æ¢¯å¤„å…¨éƒ¨åŒ–ä¸º1)\n");
         printArray(row, column, arr);
     }
 
@@ -179,7 +179,7 @@ int convert(int row, int column, double arr[row][column], int option)
 }
 
 
-//ÇóÖÈ
+//æ±‚ç§©
 int rank(int row, int column, double arr[row][column])
 {
     int i = 0, j = 0, rank = row, count = 0;
@@ -199,16 +199,16 @@ int rank(int row, int column, double arr[row][column])
     return rank;
 }
 
-//ÇóÄæ
+//æ±‚é€†
 void inverse(int row, int column, double arr[row][column], int option)
 {
     if (row != column) {
-        printf("<ÎŞÄæ>\n");  //²»ÊÇ·½ÕóÎŞÄæ
+        printf("<æ— é€†>\n");  //ä¸æ˜¯æ–¹é˜µæ— é€†
     } else {
         int i = 0, j = 0;
         double extendArr[row][column+row];
 
-        //×¼±¸Êı¾İ
+        //å‡†å¤‡æ•°æ®
         for (i = 0; i < row; i++) {
             for (j = 0; j < column; j++) {
                 extendArr[i][j] = arr[i][j];
@@ -224,11 +224,11 @@ void inverse(int row, int column, double arr[row][column], int option)
             }
         }
 
-        //»¯³É×ó×î¼òĞÎ
+        //åŒ–æˆå·¦æœ€ç®€å½¢
         convert(row, (column+row), extendArr, option);
 
-        //´òÓ¡ÄæÕó
-        printf("ÄæÎª£º\n");
+        //æ‰“å°é€†é˜µ
+        printf("é€†ä¸ºï¼š\n");
         for (i = 0; i < row; i++) {
             for (j = column; j < column+row; j++) {
                 printf("%7.3f ", extendArr[i][j]);
@@ -239,7 +239,7 @@ void inverse(int row, int column, double arr[row][column], int option)
     }
 }
 
-//´òÓ¡¾ØÕó
+//æ‰“å°çŸ©é˜µ
 void printArray(int row, int column, double arr[row][column])
 {
     int i, j;
@@ -252,7 +252,7 @@ void printArray(int row, int column, double arr[row][column])
     }
 }
 
-//¸´ÖÆÊı×é
+//å¤åˆ¶æ•°ç»„
 void copyArray(int row, int column, double origin_arr[row][column], double target_arr[row][column])
 {
     int i = 0, j = 0;
