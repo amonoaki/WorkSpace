@@ -1,0 +1,12 @@
+.vs
+.vscode
+
+test/
+
+*.o
+*.exe
+
+*.zip
+
+*.class
+*.jar
