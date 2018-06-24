@@ -20,6 +20,8 @@
 	|
 	|----java
 		|
+		|----CalendarPrint (按年打印日历，格式为3行4列，题目来源于一位外地信管学生的大作业)
+		|
 		|----Hello (HelloWorld代码)
 		|
 		|----MyEditor (一个GUI文本编辑器)
@@ -28,7 +30,7 @@
 		|
 		|----calculator (一个GUI计算器)
 		|
-		|----gobang (一个五子棋游戏)
+		|----gobang (一个五子棋游戏，题目来源于一位计科好友的假期练手)
 		|
 		|----hello (HelloWorld代码)
 		|
