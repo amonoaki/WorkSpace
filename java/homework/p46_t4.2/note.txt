@@ -1,6 +1,0 @@
-This program is used to find all the prime in a range that you
-entered in.
-
-eg:
-
-find all the prime in range: 0 ~ (100).

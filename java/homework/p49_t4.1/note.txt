@@ -1,3 +1,0 @@
-This program is used to calculate something like this:
-
-1! + 2! + ... + 10! = ?

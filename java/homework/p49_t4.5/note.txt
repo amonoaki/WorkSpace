@@ -1,5 +1,0 @@
-This program is used to calculate something like this:
-
-8 + 88 + 888 + ...
-
-You will be asked to enter a number to make sure the number of items.

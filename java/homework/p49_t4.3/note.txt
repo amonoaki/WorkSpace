@@ -1,6 +1,0 @@
-This program is used to calculate something like this:
-
-1 + 1/2! + 1/3! + 1/4! + ...
-
-In the Ex4_3.java file, the "Factorial.fac()" is in the "Factorial.class" file, 
-which was copied from another directory named "p49_t4.1".
