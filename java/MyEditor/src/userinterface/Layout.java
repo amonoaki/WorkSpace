@@ -76,10 +76,10 @@ public class Layout extends JFrame
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);  //点击关闭按钮销毁窗口
     }
     
-    public void createTab(String tabName, String str){  //str为页面的内容
+    public void createTab(String tabName, String Text){  //Text为页面的内容
     	setTabButtonListenner();
     	JPanel tabPane = new JPanel(new FlowLayout());
-    	JTextArea page = new JTextArea(str);
+    	JTextArea page = new JTextArea(Text);
     	
         tabButton = new JButton();
         tabButton.addActionListener(tabButtonListenner);
@@ -96,9 +96,21 @@ public class Layout extends JFrame
         new_file_count++;
         tab_number++;
     }
-    public void deleteTab(String tabName) {
+    
+    public void deleteTabNamed(String tabName) {
 		int index = tabbedPane.indexOfTab(tabName);  //按标签页名字找到对应的标签页索引
 		tabbedPane.remove(index);  //移除这一标签页
 		new_file_count--;
+    }
+    
+    public void setActiveTabNamed(String tabName) {
+		int index = tabbedPane.indexOfTab(tabName);  //按标签页名字找到对应的标签页索引
+		tabbedPane.setSelectedIndex(index);
+    }
+    
+    public Component getTextAreaAtTabNamed(String tabName) {
+		int index = tabbedPane.indexOfTab(tabName);  //按标签页名字找到对应的标签页索引
+    	
+    	return tabbedPane.getComponentAt(index);
     }
 }

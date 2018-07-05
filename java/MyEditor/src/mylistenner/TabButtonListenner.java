@@ -18,6 +18,6 @@ public class TabButtonListenner implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		setLayout();
 		JButton button = (JButton)e.getSource();
-		layout.deleteTab(button.getToolTipText().substring(6));   //tooltip从第6位到最后即为标签页名字
+		layout.deleteTabNamed(button.getToolTipText().substring(6));   //tooltip从第6位到最后即为标签页名字
 	}
 }
