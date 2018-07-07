@@ -90,9 +90,12 @@ public class Layout extends JFrame
         tabLabel = new JLabel(tabName);  //标签显示标签页的标签头
         tabPane.add(tabLabel);
         tabPane.add(tabButton);
+        tabPane.setToolTipText(tabName);
         
         tabbedPane.addTab(tabName, null, page, tabName);
         tabbedPane.setTabComponentAt(tabbedPane.indexOfTab(tabName), tabPane);
+        setActiveTabNamed(tabName);
+        
         new_file_count++;
         tab_number++;
     }
@@ -108,9 +111,25 @@ public class Layout extends JFrame
 		tabbedPane.setSelectedIndex(index);
     }
     
-    public Component getTextAreaAtTabNamed(String tabName) {
+    public Component getTextArea() {
+    	return tabbedPane.getSelectedComponent();    //返回当前组件
+    }
+    public Component getTextArea(String tabName) {
 		int index = tabbedPane.indexOfTab(tabName);  //按标签页名字找到对应的标签页索引
     	
     	return tabbedPane.getComponentAt(index);
     }
+    
+	public Component getTabComponent() {
+		int index = tabbedPane.getSelectedIndex();
+		
+		return tabbedPane.getTabComponentAt(index);
+	}
+    
+    /*
+    public String getTabName() {
+    	int index = tabbedPane.getSelectedIndex();
+    	String name = tabbedPane.getTitleAt(index);
+    	return name;
+    }*/
 }

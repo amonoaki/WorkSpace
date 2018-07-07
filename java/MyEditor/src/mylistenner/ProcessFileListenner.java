@@ -4,10 +4,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.swing.JFileChooser;
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import userinterface.Layout;
@@ -16,16 +20,12 @@ public class ProcessFileListenner implements ActionListener {
 
 	private Layout layout;
 	private File file;
-	JFileChooser fileChooser = new JFileChooser();  //创建文件选择类准备创建文件对话框
+ 	JFileChooser fileChooser = new JFileChooser();  //创建文件选择类准备创建文件对话框
 
-	private void setLayout() {
-		layout = new Layout();
-	}
-	
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		int status = -1;
-		setLayout();
+		layout = new Layout();
 		
 		if (event.getActionCommand() == "Open File") {  //点击了 打开文件 对话框
 			status = fileChooser.showOpenDialog(null);  //创建对话框，在页面居中显示
@@ -33,10 +33,11 @@ public class ProcessFileListenner implements ActionListener {
 				file = fileChooser.getSelectedFile();
 				String fileName = file.getName();
 				try {
+					//创建输入流
 					BufferedReader in = new BufferedReader(new FileReader(file));
 					layout.createTab(fileName, "");
-					JTextArea page = (JTextArea)layout.getTextAreaAtTabNamed(fileName);
-					
+					JTextArea page = (JTextArea)layout.getTextArea(fileName);
+					//读取文件并显示
 					String str = null;
 					while((str = in.readLine()) != null) {
 						page.append(str);
@@ -52,14 +53,44 @@ public class ProcessFileListenner implements ActionListener {
 			}
 		}
 		else if (event.getActionCommand() == "Save File") {
-			status = fileChooser.showSaveDialog(null);  //创建对话框，在页面居中显示
-			if (status == JFileChooser.APPROVE_OPTION) {
-				//保存文件，注意异常处理。注意是否已经保存过这一文件。
-				System.out.println("You choose the approve option.");
+			
+			JPanel tabPanel = (JPanel)layout.getTabComponent();
+			String fileName = tabPanel.getToolTipText();
+			file = new File(fileName);
+			
+			if (!file.exists()) {  //如果文件存在则直接保存即可
+				status = fileChooser.showSaveDialog(null);  //创建对话框，在页面居中显示
+				if (status == JFileChooser.APPROVE_OPTION) {
+					file = fileChooser.getSelectedFile();
+					tabPanel.setToolTipText(file.getAbsolutePath());
+					try {
+						//创建文档
+						file.createNewFile();
+					}
+					catch(Exception e) {
+						e.toString();
+					}
+				}
+			} else {
+				return;
+			}
+
+			try {
+				//创建输出流
+				BufferedWriter out = new BufferedWriter(new FileWriter(file));
+				//获取正在编辑的page
+				JTextArea page = (JTextArea)layout.getTextArea();
+				//将文本写入输出流
+				String text = page.getText();
+				out.write(text);
+				out.flush();
+				out.close();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 		else if (event.getActionCommand() == "New File") {
-			layout.createTab("newfile" + layout.getTabNumber(), "");			
+			layout.createTab("newfile" + layout.getTabNumber(), "");
 		}
 	}
 
