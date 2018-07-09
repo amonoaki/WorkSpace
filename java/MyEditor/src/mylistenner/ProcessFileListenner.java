@@ -19,13 +19,17 @@ import userinterface.Layout;
 public class ProcessFileListenner implements ActionListener {
 
 	private Layout layout;
+	public ProcessFileListenner(Layout layout) {
+		super();
+		this.layout = layout;
+	}
+
 	private File file;
  	JFileChooser fileChooser = new JFileChooser();  //创建文件选择类准备创建文件对话框
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		int status = -1;
-		layout = new Layout();
 		
 		if (event.getActionCommand() == "Open File") {  //点击了 打开文件 对话框
 			status = fileChooser.showOpenDialog(null);  //创建对话框，在页面居中显示

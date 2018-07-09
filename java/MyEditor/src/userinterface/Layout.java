@@ -5,21 +5,30 @@ import javax.swing.*;
 
 import mylistenner.ProcessFileListenner;
 import mylistenner.TabButtonListenner;
+import mylistenner.TabPanelListener;
 
 public class Layout extends JFrame
 {
 	private static final long serialVersionUID = 1L;
 	private static int new_file_count = 0;  //现有标签页的数量（关闭标签页则减少）
 	private static int tab_number = 0;  //标签页序号（关闭标签页不会减少，关闭程序归零）
-	private static JTabbedPane tabbedPane = new JTabbedPane();
+	private static JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
     private static JMenuBar menuBar = new JMenuBar();
     private static JMenu file = new JMenu("File");
-    
-    private JButton tabButton;
+
+	private JButton tabButton;
     private JLabel tabLabel;
     
     private ProcessFileListenner processFileListenner;
     private TabButtonListenner tabButtonListenner;
+    private TabPanelListener tabPanelListener;
+    
+    public Layout() throws HeadlessException {
+		super();
+    	processFileListenner = new ProcessFileListenner(this);
+    	tabButtonListenner = new TabButtonListenner(this);
+    	tabPanelListener = new TabPanelListener(this);
+	}
 
     public int getNewFileCount() {
     	return new_file_count;
@@ -30,12 +39,6 @@ public class Layout extends JFrame
     public JTabbedPane getTabbedPane() {
     	return tabbedPane;
     }
-    private void setProcessFileListenner() {
-    	processFileListenner = new ProcessFileListenner();
-    }
-    private void setTabButtonListenner() {
-    	tabButtonListenner = new TabButtonListenner();
-    }
 
     public void init() {
     	JMenuItem openFile, newFile, saveFile;
@@ -43,7 +46,6 @@ public class Layout extends JFrame
     	setTitle("MyEditor");  //设置标题
         setBounds(200, 100, 1000, 800);  //设置边界及窗口位置
         setLayout(new GridLayout(1, 1));
-    	setProcessFileListenner();
     	
         /*菜单栏*/
         //子菜单
@@ -77,22 +79,30 @@ public class Layout extends JFrame
     }
     
     public void createTab(String tabName, String Text){  //Text为页面的内容
-    	setTabButtonListenner();
+    	
     	JPanel tabPane = new JPanel(new FlowLayout());
+    	JPanel pagePane = new JPanel(new BorderLayout());
+    	
     	JTextArea page = new JTextArea(Text);
     	
         tabButton = new JButton();
         tabButton.addActionListener(tabButtonListenner);
+        tabButton.addMouseListener(tabPanelListener);
         tabButton.setToolTipText("close "+tabName);
-        //tabButton.setContentAreaFilled(false);  //填充透明化
-        //tabButton.setBorderPainted(false);  //取消边界显示
+        tabButton.setContentAreaFilled(false);  //填充透明化
+        tabButton.setBorderPainted(false);  //取消边界显示
         tabButton.setPreferredSize(new Dimension(13, 13));
+        
         tabLabel = new JLabel(tabName);  //标签显示标签页的标签头
+        
+        tabPane.addMouseListener(tabPanelListener);
         tabPane.add(tabLabel);
         tabPane.add(tabButton);
         tabPane.setToolTipText(tabName);
         
-        tabbedPane.addTab(tabName, null, page, tabName);
+        pagePane.add(page, BorderLayout.CENTER);
+        
+        tabbedPane.addTab(tabName, null, pagePane, tabName);
         tabbedPane.setTabComponentAt(tabbedPane.indexOfTab(tabName), tabPane);
         setActiveTabNamed(tabName);
         
@@ -112,12 +122,16 @@ public class Layout extends JFrame
     }
     
     public Component getTextArea() {
-    	return tabbedPane.getSelectedComponent();    //返回当前组件
+    	JPanel pagePane = (JPanel)tabbedPane.getSelectedComponent();
+    	BorderLayout borderLayout = (BorderLayout)pagePane.getLayout();
+    	return borderLayout.getLayoutComponent(BorderLayout.CENTER);
     }
     public Component getTextArea(String tabName) {
 		int index = tabbedPane.indexOfTab(tabName);  //按标签页名字找到对应的标签页索引
+		JPanel pagePane = (JPanel)tabbedPane.getComponentAt(index);
+    	BorderLayout borderLayout = (BorderLayout)pagePane.getLayout();
     	
-    	return tabbedPane.getComponentAt(index);
+    	return borderLayout.getLayoutComponent(BorderLayout.CENTER);    	
     }
     
 	public Component getTabComponent() {
@@ -125,11 +139,4 @@ public class Layout extends JFrame
 		
 		return tabbedPane.getTabComponentAt(index);
 	}
-    
-    /*
-    public String getTabName() {
-    	int index = tabbedPane.getSelectedIndex();
-    	String name = tabbedPane.getTitleAt(index);
-    	return name;
-    }*/
 }
