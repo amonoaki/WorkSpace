@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import javafx.scene.layout.Border;
 import mylistenner.ProcessFileListenner;
 import mylistenner.TabButtonListenner;
 import mylistenner.TabPanelListener;
@@ -12,9 +13,12 @@ public class Layout extends JFrame
 	private static final long serialVersionUID = 1L;
 	private static int new_file_count = 0;  //现有标签页的数量（关闭标签页则减少）
 	private static int tab_number = 0;  //标签页序号（关闭标签页不会减少，关闭程序归零）
+	
 	private static JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
     private static JMenuBar menuBar = new JMenuBar();
     private static JMenu file = new JMenu("File");
+    
+	private static Font font = new Font("DejaVu Sans Mono", Font.PLAIN, 17);
 
 	private JButton tabButton;
     private JLabel tabLabel;
@@ -44,7 +48,7 @@ public class Layout extends JFrame
     	JMenuItem openFile, newFile, saveFile;
     	
     	setTitle("MyEditor");  //设置标题
-        setBounds(200, 100, 1000, 800);  //设置边界及窗口位置
+        setBounds(0, 0, 1850, 1050);  //设置边界及窗口位置
         setLayout(new GridLayout(1, 1));
     	
         /*菜单栏*/
@@ -83,8 +87,10 @@ public class Layout extends JFrame
     	JPanel tabPane = new JPanel(new FlowLayout());
     	JPanel pagePane = new JPanel(new BorderLayout());
     	
-    	JTextArea page = new JTextArea(Text);    	
+    	JTextArea page = new JTextArea(Text);
     	JScrollPane scrollPane = new JScrollPane(page);
+    	    	
+    	page.setFont(font);
     	
         tabButton = new JButton();
         tabButton.addActionListener(tabButtonListenner);
