@@ -19,6 +19,7 @@ import userinterface.Layout;
 public class ProcessFileListenner implements ActionListener {
 
 	private Layout layout;
+
 	public ProcessFileListenner(Layout layout) {
 		super();
 		this.layout = layout;
@@ -32,7 +33,9 @@ public class ProcessFileListenner implements ActionListener {
 		int status = -1;
 		
 		if (event.getActionCommand() == "Open File") {  //点击了 打开文件 对话框
+			
 			status = fileChooser.showOpenDialog(null);  //创建对话框，在页面居中显示
+
 			if (status == JFileChooser.APPROVE_OPTION) {
 				file = fileChooser.getSelectedFile();
 				String fileName = file.getName();
@@ -54,6 +57,9 @@ public class ProcessFileListenner implements ActionListener {
 				catch(Exception e) {
 					e.toString();
 				}
+				
+				JPanel tabPanel = (JPanel)layout.getTabComponent();
+				tabPanel.setToolTipText(file.getAbsolutePath());
 			}
 		}
 		else if (event.getActionCommand() == "Save File") {
@@ -75,10 +81,8 @@ public class ProcessFileListenner implements ActionListener {
 						e.toString();
 					}
 				}
-			} else {
-				return;
 			}
-
+			
 			try {
 				//创建输出流
 				BufferedWriter out = new BufferedWriter(new FileWriter(file));

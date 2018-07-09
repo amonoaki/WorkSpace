@@ -83,7 +83,8 @@ public class Layout extends JFrame
     	JPanel tabPane = new JPanel(new FlowLayout());
     	JPanel pagePane = new JPanel(new BorderLayout());
     	
-    	JTextArea page = new JTextArea(Text);
+    	JTextArea page = new JTextArea(Text);    	
+    	JScrollPane scrollPane = new JScrollPane(page);
     	
         tabButton = new JButton();
         tabButton.addActionListener(tabButtonListenner);
@@ -100,7 +101,7 @@ public class Layout extends JFrame
         tabPane.add(tabButton);
         tabPane.setToolTipText(tabName);
         
-        pagePane.add(page, BorderLayout.CENTER);
+        pagePane.add(scrollPane, BorderLayout.CENTER);
         
         tabbedPane.addTab(tabName, null, pagePane, tabName);
         tabbedPane.setTabComponentAt(tabbedPane.indexOfTab(tabName), tabPane);
@@ -116,25 +117,28 @@ public class Layout extends JFrame
 		new_file_count--;
     }
     
-    public void setActiveTabNamed(String tabName) {
+    public void setActiveTabNamed(String tabName) {  //将指定标签页设为当前页
 		int index = tabbedPane.indexOfTab(tabName);  //按标签页名字找到对应的标签页索引
 		tabbedPane.setSelectedIndex(index);
     }
     
-    public Component getTextArea() {
+    public Component getTextArea() {  //返回当前标签页的textArea
     	JPanel pagePane = (JPanel)tabbedPane.getSelectedComponent();
     	BorderLayout borderLayout = (BorderLayout)pagePane.getLayout();
-    	return borderLayout.getLayoutComponent(BorderLayout.CENTER);
+    	JScrollPane scrollPane = (JScrollPane)borderLayout.getLayoutComponent(BorderLayout.CENTER);
+    	
+    	return scrollPane.getViewport().getView();
     }
-    public Component getTextArea(String tabName) {
+    public Component getTextArea(String tabName) {  //返回指定标签页的textArea
 		int index = tabbedPane.indexOfTab(tabName);  //按标签页名字找到对应的标签页索引
 		JPanel pagePane = (JPanel)tabbedPane.getComponentAt(index);
     	BorderLayout borderLayout = (BorderLayout)pagePane.getLayout();
+    	JScrollPane scrollPane = (JScrollPane)borderLayout.getLayoutComponent(BorderLayout.CENTER);
     	
-    	return borderLayout.getLayoutComponent(BorderLayout.CENTER);    	
+    	return scrollPane.getViewport().getView();
     }
     
-	public Component getTabComponent() {
+	public Component getTabComponent() {  //返回当前标签页的TabPanel
 		int index = tabbedPane.getSelectedIndex();
 		
 		return tabbedPane.getTabComponentAt(index);
