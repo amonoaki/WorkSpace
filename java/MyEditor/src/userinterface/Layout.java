@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import javafx.scene.layout.Border;
 import mylistenner.ProcessFileListenner;
 import mylistenner.TabButtonListenner;
 import mylistenner.TabPanelListener;
@@ -18,7 +17,7 @@ public class Layout extends JFrame
     private static JMenuBar menuBar = new JMenuBar();
     private static JMenu file = new JMenu("File");
     
-	private static Font font = new Font("DejaVu Sans Mono", Font.PLAIN, 17);
+	private static Font font = new Font("DejaVu Sans Mono Book", Font.PLAIN, 18);
 
 	private JButton tabButton;
     private JLabel tabLabel;

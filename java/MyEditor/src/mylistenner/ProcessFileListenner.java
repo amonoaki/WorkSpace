@@ -40,18 +40,18 @@ public class ProcessFileListenner implements ActionListener {
 				file = fileChooser.getSelectedFile();
 				String fileName = file.getName();
 				try {
-					//创建输入流
-					BufferedReader in = new BufferedReader(new FileReader(file));
 					layout.createTab(fileName, "");
 					JTextArea page = (JTextArea)layout.getTextArea(fileName);
-					//读取文件并显示
+					//创建输入流, 读取文件并显示
+					BufferedReader in = new BufferedReader(new FileReader(file));
 					String str = null;
 					while((str = in.readLine()) != null) {
+						//byte[] str1 = str.getBytes("utf-8");
 						page.append(str);
 						page.append("\n");  //手动换行
 					}
-					page.setCaretPosition(page.getDocument().getLength());  //将光标放在文本末尾
 					in.close();
+					page.setCaretPosition(page.getDocument().getLength());  //将光标放在文本末尾
 					layout.setActiveTabNamed(fileName);  //将新建的选项卡设置为活动的选项卡
 				}
 				catch(Exception e) {
