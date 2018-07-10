@@ -10,17 +10,13 @@ import mylistenner.TabPanelListener;
 public class Layout extends JFrame
 {
 	private static final long serialVersionUID = 1L;
+	private static final Font font = new Font("DejaVu Sans Mono Book", Font.PLAIN, 18);
+
 	private static int new_file_count = 0;  //现有标签页的数量（关闭标签页则减少）
 	private static int tab_number = 0;  //标签页序号（关闭标签页不会减少，关闭程序归零）
 	
 	private static JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
     private static JMenuBar menuBar = new JMenuBar();
-    private static JMenu file = new JMenu("File");
-    
-	private static Font font = new Font("DejaVu Sans Mono Book", Font.PLAIN, 18);
-
-	private JButton tabButton;
-    private JLabel tabLabel;
     
     private ProcessFileListenner processFileListenner;
     private TabButtonListenner tabButtonListenner;
@@ -44,7 +40,9 @@ public class Layout extends JFrame
     }
 
     public void init() {
-    	JMenuItem openFile, newFile, saveFile;
+        JMenu file = new JMenu("File"), settings = new JMenu("Settings");
+        
+    	JMenuItem openFile = null, newFile = null, saveFile = null;
     	
     	setTitle("MyEditor");  //设置标题
         setBounds(0, 0, 1850, 1050);  //设置边界及窗口位置
@@ -70,6 +68,7 @@ public class Layout extends JFrame
         file.add(saveFile);
         //菜单项加到菜单栏中
         menuBar.add(file);
+        menuBar.add(settings);
         //将菜单栏添加到窗口
         setJMenuBar(menuBar);
 
@@ -85,12 +84,17 @@ public class Layout extends JFrame
     	
     	JPanel tabPane = new JPanel(new FlowLayout());
     	JPanel pagePane = new JPanel(new BorderLayout());
+    	JPanel tipsPane = new JPanel(new GridLayout(1, 3));
+    	
+    	JButton tabButton = null;
+        JLabel tabLabel = new JLabel(tabName), tipsRowLabel = new JLabel("行:"), tipsColumnLabel = new JLabel("列:"), tipsFencLabel = new JLabel("file enconding");
     	
     	JTextArea page = new JTextArea(Text);
     	JScrollPane scrollPane = new JScrollPane(page);
-    	    	
+
     	page.setFont(font);
-    	
+
+    	/*标签头面板*/
         tabButton = new JButton();
         tabButton.addActionListener(tabButtonListenner);
         tabButton.addMouseListener(tabPanelListener);
@@ -98,15 +102,21 @@ public class Layout extends JFrame
         tabButton.setContentAreaFilled(false);  //填充透明化
         tabButton.setBorderPainted(false);  //取消边界显示
         tabButton.setPreferredSize(new Dimension(13, 13));
-        
-        tabLabel = new JLabel(tabName);  //标签显示标签页的标签头
-        
+                
         tabPane.addMouseListener(tabPanelListener);
         tabPane.add(tabLabel);
         tabPane.add(tabButton);
         tabPane.setToolTipText(tabName);
         
+        /*主体面板*/
+        //tips小面板
+        tipsPane.add(tipsRowLabel);
+        tipsPane.add(tipsColumnLabel);
+        tipsPane.add(tipsFencLabel);
+        //主体面板
         pagePane.add(scrollPane, BorderLayout.CENTER);
+        pagePane.add(tipsPane, BorderLayout.SOUTH);
+        
         
         tabbedPane.addTab(tabName, null, pagePane, tabName);
         tabbedPane.setTabComponentAt(tabbedPane.indexOfTab(tabName), tabPane);

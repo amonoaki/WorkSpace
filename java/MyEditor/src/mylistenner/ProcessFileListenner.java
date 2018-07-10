@@ -46,7 +46,6 @@ public class ProcessFileListenner implements ActionListener {
 					BufferedReader in = new BufferedReader(new FileReader(file));
 					String str = null;
 					while((str = in.readLine()) != null) {
-						//byte[] str1 = str.getBytes("utf-8");
 						page.append(str);
 						page.append("\n");  //手动换行
 					}
