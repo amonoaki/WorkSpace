@@ -2,9 +2,9 @@
 日常各类项目代码存放空间(环境由Windows转为Ubuntu)<br>
 目录:<br>
 ```
-WorkSpace
+WorkSpace/
         |
-        |----cprogram
+        |----cprogram/
                 |
                 |----Decimal_to_Binary (二进制与十进制互相转换)
 		
@@ -15,11 +15,11 @@ WorkSpace
 		|
 		|----matrix (对矩阵的各种处理(包括化为行最简式、求逆、求秩)(还有待完善))
 	|
-	|----html
+	|----html/
 		|
 		|----hello.html (HelloWorld代码)
 	|
-	|----java
+	|----java/
 		|
 		|----CalendarPrint (按年打印日历，格式为3行4列，题目来源于一位外地信管学生的大作业)
 		|
@@ -27,7 +27,7 @@ WorkSpace
 		|
 		|----MyEditor (一个GUI文本编辑器)
 	|
-	|----python
+	|----python/
 		|
 		|----calculator (一个GUI计算器)
 		|
