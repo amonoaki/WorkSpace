@@ -5,6 +5,7 @@ test/
 
 *.o
 *.exe
+*.out
 
 *.zip
 
