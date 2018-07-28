@@ -20,8 +20,9 @@ int main(void)
         switch(opt) {
             case TIP: prtTips(); break;
             case ADD: addData(&list, &total); break;
-            case PRT: prtData(&list); break;
+            case PRT: prtData(&list, list.phead, list.ptail); break;
             case DEL: delData(&list, &total); break;
+            case SEA: seaData(&list, total); break;
             case EXIT: statu = quit(&list); break;
             default: printf("抱歉，%d为非法选项。忘记选项了？尝试[0]显示系统帮助。\n", opt);
         }
@@ -30,6 +31,8 @@ int main(void)
 
     return 0;
 }
+
+
 
 /*数据准备*/
 //保存数据（文件输出）
@@ -69,11 +72,13 @@ void readData(List *list, int *total)
     fclose(pf);
 }
 
+
+
 /*系统功能*/
 //显示提示
 void prtTips()
 {
-    printf("[0]显示提示\t [1]增加数据\t [2]显示数据\t [3]删除数据\t [-1]退出\t\n");
+    printf("[0]显示提示\t [1]增加数据\t [2]显示数据\t [3]删除数据\t [4]查找数据\t [-1]退出\t\n");
 }
 //退出
 int quit(const List *list)
@@ -90,17 +95,18 @@ int quit(const List *list)
     }
 }
 //显示数据（标准输出）
-void prtData(const List *list)
+void prtData(const List *list, Node* lowerNode, Node* upperNode)
 {
     int cnt = 0;
-    Node *p = list->phead;
+    Node *p = lowerNode;
 
-    printf("节点序号\t 当前节点地址\t 上一个节点地址\t 当前节点的值\t 下一个节点的地址\n");
-    for (; p; p = p->pnext) {
-        printf("%-10d\t %-12p\t %-12p\t %-10d\t %-12p\n", cnt++, p, p->plast, p->value, p->pnext);
+    printf("当前节点地址\t 上一个节点地址\t 当前节点的值\t 下一个节点的地址\n");
+    for (; p != NULL && (p->plast) != upperNode; p = p->pnext) {
+        printf("%-12p\t %-12p\t %-10d\t %-12p\n", p, p->plast, p->value, p->pnext);
+        cnt++;
         // printf("%d ", p->value);
     }
-    putchar('\n');
+    printf("%d条记录\n", cnt);
 }
 //核心功能
 //增
@@ -130,7 +136,7 @@ void addData(List *list, int *total)
 void delData(List* list, int *total)
 {
     int cnt = 0, opt = 0;
-    int value, lowerLimit, upperLimit;
+    int value, lowerNumber, upperNumber;
 
     printf("[1]按值查找删除, [2]按索引区间删除; \n");
     while(getInt(&opt, "你的删除方式")) {
@@ -139,9 +145,9 @@ void delData(List* list, int *total)
             cnt = rmNodeValued(list, value);
             break;
         } else if (opt == 2) {
-            getInt(&lowerLimit, "开始删除的索引值");
-            getInt(&upperLimit, "停止删除的索引值");
-            cnt = rmNodeIndex(list, *total, lowerLimit, upperLimit);
+            getInt(&lowerNumber, "开始删除的索引值");
+            getInt(&upperNumber, "停止删除的索引值");
+            cnt = rmNodeIndex(list, *total, lowerNumber, upperNumber);
             break;
         } else {
             printf("抱歉，选项无效，请重试。\n");
@@ -156,6 +162,42 @@ void delData(List* list, int *total)
     saveData(list);
     printf("成功删除%d个节点\n", cnt);
 }
+//查
+void seaData(const List *list, int total)
+{
+    int opt, value, cnt = 0;
+
+    printf("[1]按值查找查找, [2]按索引区间查找; \n");
+    while(getInt(&opt, "你的查找方式")) {
+        if (opt == 1) {
+            Node* pnodes[total];
+            int i, cnt = 0;
+
+            getInt(&value, "待查找节点的值");
+            searchNodeValued(list, total, value, pnodes);
+            for (i = 0; i < total && pnodes[i] != NULL; i++) {
+                prtData(list, pnodes[i], pnodes[i]);
+                cnt++;
+            }
+            printf("共%d条记录\n", cnt);
+            break;
+        } else if (opt == 2) {
+            int lowerNumber, upperNumber;
+            getInt(&lowerNumber, "开始查找的索引值");
+            getInt(&upperNumber, "停止查找的索引值");
+
+            break;
+        } else {
+            printf("抱歉，选项无效，请重试。\n");
+            printf("[1]按值查找查找, [2]按索引区间查找; \n");
+            continue;
+        }
+    }
+
+}
+
+
+
 
 /*数据结构支持-链表*/
 void addNode(List *list, int value)
@@ -188,28 +230,66 @@ int rmNodeValued(List *list, int value)
     return cnt;
 }
 //按索引区间删除数据
-int rmNodeIndex(List *list, int total, int lowerLimit, int upperLimit)
+int rmNodeIndex(List *list, int total, int lowerNumber, int upperNumber)
 {
     int i, cnt = 0;
     Node *p = list->phead;
 
-    if ( lowerLimit > 0 && upperLimit < total && lowerLimit <= upperLimit ) {
+    if ( lowerNumber > 0 && upperNumber < total && lowerNumber <= upperNumber ) {
         //定位
-        for (i = 0; i < lowerLimit; i++) {
+        for (i = 0; i < lowerNumber; i++) {
             p = p->pnext;
         }
         //删除
-        for (i = lowerLimit; i <= upperLimit; i++) {
+        for (i = lowerNumber; i <= upperNumber; i++) {
             freeNode(list, p);
             cnt++;
             p = p->pnext;
         }
         return cnt;
     } else {
-        printf("lowerLimit=%d, upperLimit=%d, total=%d\n", lowerLimit, upperLimit, total);
         printf("索引无效，请检查重试\n");
         return -1;
     }
+}
+
+//按值查找
+void searchNodeValued(const List *list, int total, int value, Node** pnodes)
+{
+    Node *p;
+    int n = 0;
+
+    for (p = list->phead; p; p = p->pnext) {
+        if (p->value == value) {
+            pnodes[n] = p;
+            n++;
+        }
+    }
+}
+
+//按索引区间查找
+int searchNodeIndex(const List *list, int total, int lowerNumber, int upperNumber, Node *lowerNode, Node *upperNode)
+{
+    int i;
+    Node *p;
+    
+    //如果越界，返回-1;
+    if ( lowerNumber < 0 || upperNumber > total || lowerNumber > upperNumber ) {
+        return -1;
+    }
+
+    //找出上下限的地址
+    for (i = 0; i < lowerNumber; i++) {
+        p = p->pnext;
+    }
+    lowerNode = p;
+
+    for (i = lowerNumber; i <= upperNumber; i++) {
+        p = p->pnext;
+    }
+    upperNode = p;
+
+    return 0;
 }
 
 /*工具*/

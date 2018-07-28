@@ -15,13 +15,16 @@ typedef struct _list
 } List;
 
 //可被系统识别的选项
-enum options{EXIT=-1, TIP=0, ADD=1, PRT=2, DEL=3};
+enum options{EXIT=-1, TIP=0, ADD=1, PRT=2, DEL=3, SEA=4};
 
 //链表(Node-Link)
 void addNode(List *list, int value);
 
 int rmNodeValued(List *list, int value);
-int rmNodeIndex(List *list, int total, int lowerLimit, int upperLimit);
+int rmNodeIndex(List *list, int total, int lowerNumber, int upperNumber);
+
+void searchNodeValued(const List *list, int total, int value, Node** pnodes);
+int searchNodeIndex(const List *list, int total, int lowerNumber, int upperNumber, Node *lowerNode, Node *upperNode);
 
 //数据(user's data)
 void prtTips();
@@ -31,8 +34,9 @@ void readData(List *list, int *total);
 void saveData(const List *list);
 
 void addData(List *list, int *total);
-void prtData(const List *list);
+void prtData(const List *list, Node* lowerNode, Node* upperNode);
 void delData(List* list, int *total);
+void seaData(const List *list, int total);
 
 //工具
 void freeNode(List *list, Node *p);
