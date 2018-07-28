@@ -20,10 +20,12 @@ int main(void)
         switch(opt) {
             case TIP: prtTips(); break;
             case ADD: addData(&list, &total); break;
-            case PRT: prtData(&list, list.phead, list.ptail, 1); break;
+            case PRT: prtData(&list); break;
             case DEL: delData(&list, &total); break;
             case SEA: seaData(&list, total); break;
-            case EXIT: statu = quit(&list); break;
+            case EXIT: 
+                printf("确认退出？[y/n] ");
+                statu = confirm(); break;
             default: printf("抱歉，%d为非法选项。忘记选项了？尝试[0]显示系统帮助。\n", opt);
         }
     } while(statu == 1);
@@ -80,37 +82,32 @@ void prtTips()
 {
     printf("[0]显示提示\t [1]增加数据\t [2]显示数据\t [3]删除数据\t [4]查找数据\t [-1]退出\t\n");
 }
-//退出
-int quit(const List *list)
-{
-    char choice;
-
-    printf("确认退出？[y/n] ");
-    scanf("%c", &choice);
-    if (choice == 'y' || choice == 'Y') {
-        return -1;   
-    } else {
-        return 1;
-    }
-}
 //显示数据（标准输出）
-void prtData(const List *list, Node* lowerNode, Node* upperNode, int showNum)
+void prtData(const List *list)
 {
     int cnt = 0;
-    Node *p = lowerNode;
+    Node *p = NULL;
 
-    printf("当前节点地址\t 上一个节点地址\t 当前节点的值\t 下一个节点的地址\n");
-    for (; p != NULL && (p->plast) != upperNode; p = p->pnext) {
-        if (showNum == 1) {
-            printf("%-10d\t %-12p\t %-12p\t %-10d\t %-12p\n", cnt++, p, p->plast, p->value, p->pnext);
-        } else {
-            printf("%-12p\t %-12p\t %-10d\t %-12p\n", p, p->plast, p->value, p->pnext);
-            cnt++;
-        }
-        
+    printf("序号\t 当前节点地址\t 上一个节点地址\t 当前节点的值\t 下一个节点的地址\n");
+    for (p = list->phead; p; p = p->pnext) {
+        printf("%-10d\t %-12p\t %-12p\t %-10d\t %-12p\n", cnt++, p, p->plast, p->value, p->pnext);
     }
-    printf("%d条记录\n\n", cnt);
+    printf("共%d条记录\n\n", cnt);
 }
+//打印给定节点数组的数据，传入list, 节点数组，数组长度，开始的序号 （标准输出）
+void prtDataInArray(const List *list, Node** pnodes, int length, int beginNum)
+{
+    int i, cnt = beginNum;
+
+    printf("序号\t 当前节点地址\t 上一个节点地址\t 当前节点的值\t 下一个节点的地址\n");
+    for (i = 0; i < length; i++) {
+        printf("%-10d\t %-12p\t %-12p\t %-10d\t %-12p\n", cnt++, pnodes[i], pnodes[i]->plast, pnodes[i]->value, pnodes[i]->pnext);
+    }
+    printf("共%d条记录\n\n", cnt-beginNum);
+}
+
+
+
 //核心功能
 //增
 void addData(List *list, int *total)
@@ -145,12 +142,24 @@ void delData(List* list, int *total)
     while(getInt(&opt, "你的删除方式")) {
         if (opt == 1) {
             getInt(&value, "待删除节点的值");
-            cnt = rmNodeValued(list, value);
+            printf("确认删除？[y/n]");
+            if (confirm() == -1) {
+                cnt = rmNodeValued(list, *total, value);
+                printf("删除了%d个节点\n", cnt);
+            } else {
+                printf("操作取消\n");
+            }
             break;
         } else if (opt == 2) {
             getInt(&lowerNumber, "开始删除的索引值");
             getInt(&upperNumber, "停止删除的索引值");
-            cnt = rmNodeIndex(list, *total, lowerNumber, upperNumber);
+            printf("确认删除？[y/n]");
+            if (confirm() == -1) {
+                cnt = rmNodeIndex(list, *total, lowerNumber, upperNumber);
+                printf("删除了%d个节点\n", cnt);
+            } else {
+                printf("操作取消\n");
+            }
             break;
         } else if (opt == -1) {
             break;
@@ -160,56 +169,45 @@ void delData(List* list, int *total)
             continue;
         }
     }
-    if (cnt == -1) {
-        cnt = 0;
-    }
     *total -= cnt;
     saveData(list);
-    printf("成功删除%d个节点\n", cnt);
 }
 //查
 void seaData(const List *list, int total)
 {
-    int opt, value, cnt = 0;
+    int opt, value, i, cnt = 0;
+    Node* pnodes[total];
+    int lowerNumber = 0, upperNumber = 0;
 
     printf("[1]按值查找查找, [2]按索引区间查找; \n");
     while(getInt(&opt, "你的查找方式")) {
         if (opt == 1) {
-            Node* pnodes[total];
-            int i, cnt = 0;
-
             getInt(&value, "待查找节点的值");
-            searchNodeValued(list, total, value, pnodes);
-            for (i = 0; i < total && pnodes[i] != NULL; i++) {
-                prtData(list, pnodes[i], pnodes[i], 0);
-                cnt++;
-            }
-            printf("共%d条记录\n", cnt);
+            cnt = searchNodeValued(list, value, pnodes);
             break;
         } else if (opt == 2) {
-            int lowerNumber, upperNumber;
-            Node *lowerNode = NULL, *upperNode = NULL;
-
             getInt(&lowerNumber, "开始查找的索引值");
             getInt(&upperNumber, "停止查找的索引值");
-            int statu = searchNodeIndex(list, total, lowerNumber, upperNumber, &lowerNode, &upperNode);
-            prtData(list, lowerNode, upperNode, 0);
+            if ((cnt = searchNodeIndex(list, total, lowerNumber, upperNumber, pnodes)) == 0) {
+                printf("索引有误\n");
+            }
             break;
         } else if (opt == -1) {
-            break;
+            return;
         } else {
             printf("抱歉，选项无效，请重试。\n");
             printf("[1]按值查找查找, [2]按索引区间查找; \n");
             continue;
         }
     }
-
+    prtDataInArray(list, pnodes, cnt, lowerNumber);
 }
 
 
 
 
 /*数据结构支持-链表*/
+//新增一个节点，传入list，新增节点的值
 void addNode(List *list, int value)
 {
     //申请一块新内存，用于创建新节点
@@ -224,47 +222,39 @@ void addNode(List *list, int value)
         list->ptail = (list->ptail)->pnext = p;
     }
 }
-//遍历删除值为value的节点
-int rmNodeValued(List *list, int value)
+//遍历删除值为value的节点,传入list, total, 要删除的值
+int rmNodeValued(List *list, int total, int value)
 {
-    Node *p;
-    int cnt = 0;
+    Node* pnodes[total];
+    int i, cnt = 0;
 
-    for (p = list->phead; p; p = p->pnext) {
-        if (p->value == value) {
-            freeNode(list, p);
-            cnt++;
-        }
+    cnt = searchNodeValued(list, value, pnodes);
+    for (i = 0; i < cnt; i++) {
+        freeNode(list, pnodes[i]);
     }
 
     return cnt;
 }
-//按索引区间删除数据
+//按索引区间删除数据，传入list,total，索引的上下限
+//注意：在遍历删除的时候，把p给free掉以后，就无法通过p->pnext来找到p的下一个了，所以还是把要free的地址存到指针数组里比较方便
 int rmNodeIndex(List *list, int total, int lowerNumber, int upperNumber)
 {
+    Node* pnodes[total];
     int i, cnt = 0;
-    Node *p = list->phead;
 
-    if ( lowerNumber > 0 && upperNumber < total && lowerNumber <= upperNumber ) {
-        //定位
-        for (i = 0; i < lowerNumber; i++) {
-            p = p->pnext;
-        }
-        //删除
-        for (i = lowerNumber; i <= upperNumber; i++) {
-            freeNode(list, p);
-            cnt++;
-            p = p->pnext;
+    if (cnt = searchNodeIndex(list, total, lowerNumber, upperNumber, pnodes)) {
+        for (i = 0; i < cnt; i++) {
+            freeNode(list, pnodes[i]);
         }
         return cnt;
     } else {
-        printf("索引无效，请检查重试\n");
-        return -1;
+        printf("索引有误\n");
+        return 0;
     }
 }
 
-//按值查找
-void searchNodeValued(const List *list, int total, int value, Node** pnodes)
+//按值查找，传入list, 传入要查找的值和节点地址数组，结果将保存在传入的节点地址数组中，返回查找的个数
+int searchNodeValued(const List *list, int value, Node** pnodes)
 {
     Node *p;
     int n = 0;
@@ -275,31 +265,33 @@ void searchNodeValued(const List *list, int total, int value, Node** pnodes)
             n++;
         }
     }
+
+    return n;
 }
 
-//按索引区间查找，输入序号区间，修改传入的节点地址区间
-int searchNodeIndex(const List *list, int total, int lowerNumber, int upperNumber, Node **lowerNode, Node **upperNode)
+//按索引区间查找，传入list,total，序号区间，一个指针数组，函数修改指针数组，由查找到的节点地址组成，越界返回0，成功返回数组长度
+int searchNodeIndex(const List *list, int total, int lowerNumber, int upperNumber, Node **pnodes)
 {
-    int i;
+    int i, cnt = 0;
     Node *p = list->phead;
     
-    //如果越界，返回-1;
-    if ( lowerNumber < 0 || upperNumber > total || lowerNumber > upperNumber ) {
-        return -1;
+    //如果越界或索引错误，返回0;
+    if ( lowerNumber < 0 || upperNumber > total-1 || lowerNumber > upperNumber ) {
+        return 0;
     }
 
-    //找出上下限的地址
+    //找出上下限之间的地址存入数组
     for (i = 0; i < lowerNumber; i++) {
         p = p->pnext;
     }
-    *lowerNode = p;
 
-    for (i = lowerNumber; i < upperNumber; i++) {
+    for (i = lowerNumber; i <= upperNumber; i++) {
+        pnodes[cnt] = p;
+        cnt++;
         p = p->pnext;
     }
-    *upperNode = p;
-
-    return 0;
+    
+    return cnt;
 }
 
 /*工具*/
@@ -318,7 +310,7 @@ void freeNode(List *list, Node *p)
     }
     free(p);
 }
-//获得一个整数
+//获得一个整数，传入目标变量地址和提示字符串，将最后一次scanf的返回值返回
 int getInt(int *tar, char *tip)
 {
     int statu;
@@ -332,4 +324,16 @@ int getInt(int *tar, char *tip)
     while (getchar() != '\n');  //消耗剩余整行字符
 
     return statu;
+}
+//确认是否执行操作，用户输入y返回-1，否则返回1
+int confirm()
+{
+    char choice;
+
+    scanf("%c", &choice);
+    if (choice == 'y' || choice == 'Y') {
+        return -1;   
+    } else {
+        return 1;
+    }
 }
