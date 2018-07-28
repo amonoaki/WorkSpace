@@ -20,7 +20,7 @@ int main(void)
         switch(opt) {
             case TIP: prtTips(); break;
             case ADD: addData(&list, &total); break;
-            case PRT: prtData(&list, list.phead, list.ptail); break;
+            case PRT: prtData(&list, list.phead, list.ptail, 1); break;
             case DEL: delData(&list, &total); break;
             case SEA: seaData(&list, total); break;
             case EXIT: statu = quit(&list); break;
@@ -88,25 +88,28 @@ int quit(const List *list)
     printf("确认退出？[y/n] ");
     scanf("%c", &choice);
     if (choice == 'y' || choice == 'Y') {
-        saveData(list);
         return -1;   
     } else {
         return 1;
     }
 }
 //显示数据（标准输出）
-void prtData(const List *list, Node* lowerNode, Node* upperNode)
+void prtData(const List *list, Node* lowerNode, Node* upperNode, int showNum)
 {
     int cnt = 0;
     Node *p = lowerNode;
 
     printf("当前节点地址\t 上一个节点地址\t 当前节点的值\t 下一个节点的地址\n");
     for (; p != NULL && (p->plast) != upperNode; p = p->pnext) {
-        printf("%-12p\t %-12p\t %-10d\t %-12p\n", p, p->plast, p->value, p->pnext);
-        cnt++;
-        // printf("%d ", p->value);
+        if (showNum == 1) {
+            printf("%-10d\t %-12p\t %-12p\t %-10d\t %-12p\n", cnt++, p, p->plast, p->value, p->pnext);
+        } else {
+            printf("%-12p\t %-12p\t %-10d\t %-12p\n", p, p->plast, p->value, p->pnext);
+            cnt++;
+        }
+        
     }
-    printf("%d条记录\n", cnt);
+    printf("%d条记录\n\n", cnt);
 }
 //核心功能
 //增
@@ -149,6 +152,8 @@ void delData(List* list, int *total)
             getInt(&upperNumber, "停止删除的索引值");
             cnt = rmNodeIndex(list, *total, lowerNumber, upperNumber);
             break;
+        } else if (opt == -1) {
+            break;
         } else {
             printf("抱歉，选项无效，请重试。\n");
             printf("[1]按值查找删除, [2]按索引区间删除; \n");
@@ -176,16 +181,21 @@ void seaData(const List *list, int total)
             getInt(&value, "待查找节点的值");
             searchNodeValued(list, total, value, pnodes);
             for (i = 0; i < total && pnodes[i] != NULL; i++) {
-                prtData(list, pnodes[i], pnodes[i]);
+                prtData(list, pnodes[i], pnodes[i], 0);
                 cnt++;
             }
             printf("共%d条记录\n", cnt);
             break;
         } else if (opt == 2) {
             int lowerNumber, upperNumber;
+            Node *lowerNode = NULL, *upperNode = NULL;
+
             getInt(&lowerNumber, "开始查找的索引值");
             getInt(&upperNumber, "停止查找的索引值");
-
+            int statu = searchNodeIndex(list, total, lowerNumber, upperNumber, &lowerNode, &upperNode);
+            prtData(list, lowerNode, upperNode, 0);
+            break;
+        } else if (opt == -1) {
             break;
         } else {
             printf("抱歉，选项无效，请重试。\n");
@@ -267,11 +277,11 @@ void searchNodeValued(const List *list, int total, int value, Node** pnodes)
     }
 }
 
-//按索引区间查找
-int searchNodeIndex(const List *list, int total, int lowerNumber, int upperNumber, Node *lowerNode, Node *upperNode)
+//按索引区间查找，输入序号区间，修改传入的节点地址区间
+int searchNodeIndex(const List *list, int total, int lowerNumber, int upperNumber, Node **lowerNode, Node **upperNode)
 {
     int i;
-    Node *p;
+    Node *p = list->phead;
     
     //如果越界，返回-1;
     if ( lowerNumber < 0 || upperNumber > total || lowerNumber > upperNumber ) {
@@ -282,12 +292,12 @@ int searchNodeIndex(const List *list, int total, int lowerNumber, int upperNumbe
     for (i = 0; i < lowerNumber; i++) {
         p = p->pnext;
     }
-    lowerNode = p;
+    *lowerNode = p;
 
-    for (i = lowerNumber; i <= upperNumber; i++) {
+    for (i = lowerNumber; i < upperNumber; i++) {
         p = p->pnext;
     }
-    upperNode = p;
+    *upperNode = p;
 
     return 0;
 }
