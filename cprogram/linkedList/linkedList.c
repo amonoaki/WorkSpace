@@ -23,6 +23,7 @@ int main(void)
             case PRT: prtData(&list); break;
             case DEL: delData(&list, &total); break;
             case SEA: seaData(&list, total); break;
+            case MOD: modData(&list, total); break;
             case EXIT: 
                 printf("确认退出？[y/n] ");
                 statu = confirm(); break;
@@ -80,7 +81,7 @@ void readData(List *list, int *total)
 //显示提示
 void prtTips()
 {
-    printf("[0]显示提示\t [1]增加数据\t [2]显示数据\t [3]删除数据\t [4]查找数据\t [-1]退出\t\n");
+    printf("[0]显示提示\t [1]增加数据\t [2]显示数据\t [3]删除数据\t [4]查找数据\t [5]修改数据\t [-1]退出\t\n");
 }
 //显示数据（标准输出）
 void prtData(const List *list)
@@ -171,6 +172,23 @@ void delData(List* list, int *total)
     }
     *total -= cnt;
     saveData(list);
+}
+//改
+void modData(const List *list, int total)
+{
+    int lowerNumber, upperNumber, length, newValue;
+    Node* pnodes[total];
+
+    getInt(&lowerNumber, "开始修改的索引值");
+    getInt(&upperNumber, "停止修改的索引值");
+    if (length = searchNodeIndex(list, total, lowerNumber, upperNumber, pnodes)) {
+        modifyNode(pnodes, length, lowerNumber);
+        printf("全部修改完成\n");
+        saveData(list);
+    } else {
+        printf("索引有误，操作取消\n");
+    }
+    
 }
 //查
 void seaData(const List *list, int total)
@@ -293,7 +311,17 @@ int searchNodeIndex(const List *list, int total, int lowerNumber, int upperNumbe
     
     return cnt;
 }
+//修改指定索引区间的节点的值
+void modifyNode(Node **pnodes, int length, int beginNum)
+{
+    int i, newValue;
 
+    for (i = 0; i < length; i++) {
+        printf("这是原始值：\n序号：%-10d\t 值：%-12d\n", beginNum++, pnodes[i]->value);
+        getInt(&newValue, "此项的新值");
+        pnodes[i]->value = newValue;
+    }
+}
 /*工具*/
 //释放节点空间并拼接链表
 void freeNode(List *list, Node *p)
