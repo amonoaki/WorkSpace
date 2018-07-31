@@ -15,7 +15,7 @@ int main(void)
     prtTips();
     
     do {
-        statu = getInt(&opt, "你的选项");
+        statu = getInt(&opt, "要使用功能的序号");
 
         switch(opt) {
             case TIP: prtTips(); break;
@@ -24,6 +24,7 @@ int main(void)
             case DEL: delData(&list, &total); break;
             case SEA: seaData(&list, total); break;
             case MOD: modData(&list, total); break;
+            case INS: insertData(&list, &total); break;
             case EXIT: 
                 printf("确认退出？[y/n] ");
                 statu = confirm(); break;
@@ -81,7 +82,7 @@ void readData(List *list, int *total)
 //显示提示
 void prtTips()
 {
-    printf("[0]显示提示\t [1]增加数据\t [2]显示数据\t [3]删除数据\t [4]查找数据\t [5]修改数据\t [-1]退出\t\n");
+    printf("[0]显示提示\t [1]增加数据\t [2]显示数据\t [3]删除数据\t [4]查找数据\t [5]修改数据\t [6]插入数据\t [-1]退出\t\n");
 }
 //显示数据（标准输出）
 void prtData(const List *list)
@@ -113,25 +114,23 @@ void prtDataInArray(const List *list, Node** pnodes, int length, int beginNum)
 //增
 void addData(List *list, int *total)
 {
-    int number = 0, statu = 0, cnt_y = 0, cnt_n = 0;
-
-    printf("请输入要添加的数据(-1结束):\n");
-    statu = scanf(" %d", &number);
-    while(number != -1) {
-        if (statu != 1) {
-            cnt_n++;
-            while (getchar() != '\n');  //消耗剩余整行字符
-            printf("你输入了无效字符，%d以后的所有字符已被跳过\n请继续输入(-1结束):\n", number);
-        } else {
-            addNode(list, number);
-            cnt_y++;
-            (*total)++;
-        }
-        statu = scanf(" %d", &number);
-    }
-    while (getchar() != '\n');  //消耗剩余整行字符
+    addvalue(list, total, "添加");
     saveData(list);
-    printf("成功添加%d个数据， 其中%d处忽略了无效数据\n", cnt_y, cnt_n);
+}
+//插入
+void insertData(List *list, int *total)
+{
+    int index;
+    getInt(&index, "你要在哪个序号后添加?");
+
+    if (index >= 0 && index < *total) {
+        insertNode(list, total, index);
+        saveData(list);
+    } else if (index == *total) {
+        addData(list, total);
+    } else {
+        printf("只有%d项数据，序号超出范围。\n", *total);
+    }
 }
 //删
 void delData(List* list, int *total)
@@ -224,6 +223,7 @@ void seaData(const List *list, int total)
 
 
 
+
 /*数据结构支持-链表*/
 //新增一个节点，传入list，新增节点的值
 void addNode(List *list, int value)
@@ -239,6 +239,30 @@ void addNode(List *list, int value)
     } else {                    //存在头节点时
         list->ptail = (list->ptail)->pnext = p;
     }
+}
+//插入一个节点, 传入插入位置的前节点地址、值value
+void insertNode(List *list, int *total, int index)
+{
+    int i;
+    Node *pindex = list->phead;
+
+    //定位index指向的节点地址
+    for (int i = 0; i < index; i++) {
+        pindex = pindex->pnext;
+    }
+
+    //获得一段链表
+    List tempList;
+    tempList.phead = tempList.ptail = NULL;
+
+    addvalue(&tempList, total, "插入");
+    
+    //更改临时链表首尾存储的地址
+    (tempList.phead)->plast = pindex;
+    (tempList.ptail)->pnext = pindex->pnext;
+    //更改插入位置两个节点存储的地址
+    (pindex->pnext)->plast = tempList.ptail;
+    pindex->pnext = tempList.phead;
 }
 //遍历删除值为value的节点,传入list, total, 要删除的值
 int rmNodeValued(List *list, int total, int value)
@@ -270,7 +294,6 @@ int rmNodeIndex(List *list, int total, int lowerNumber, int upperNumber)
         return 0;
     }
 }
-
 //按值查找，传入list, 传入要查找的值和节点地址数组，结果将保存在传入的节点地址数组中，返回查找的个数
 int searchNodeValued(const List *list, int value, Node** pnodes)
 {
@@ -286,7 +309,6 @@ int searchNodeValued(const List *list, int value, Node** pnodes)
 
     return n;
 }
-
 //按索引区间查找，传入list,total，序号区间，一个指针数组，函数修改指针数组，由查找到的节点地址组成，越界返回0，成功返回数组长度
 int searchNodeIndex(const List *list, int total, int lowerNumber, int upperNumber, Node **pnodes)
 {
@@ -322,6 +344,10 @@ void modifyNode(Node **pnodes, int length, int beginNum)
         pnodes[i]->value = newValue;
     }
 }
+
+
+
+
 /*工具*/
 //释放节点空间并拼接链表
 void freeNode(List *list, Node *p)
@@ -364,4 +390,26 @@ int confirm()
     } else {
         return 1;
     }
+}
+//给一段链表增加数据，输入链表及长度、提示字符
+void addvalue(List *list, int *total, char* tips)
+{
+    int number = 0, statu = 0, cnt_y = 0, cnt_n = 0;
+
+    printf("请输入要%s的数据(-1结束):\n", tips);
+    statu = scanf(" %d", &number);
+    while(number != -1) {
+        if (statu != 1) {
+            cnt_n++;
+            while (getchar() != '\n');  //消耗剩余整行字符
+            printf("你输入了无效字符，%d以后的所有字符已被跳过\n请继续输入(-1结束):\n", number);
+        } else {
+            addNode(list, number);
+            cnt_y++;
+            (*total)++;
+        }
+        statu = scanf(" %d", &number);
+    }
+    while (getchar() != '\n');  //消耗剩余整行字符
+    printf("成功%s%d个数据， 其中%d处忽略了无效数据\n", tips, cnt_y, cnt_n);
 }
