@@ -50,4 +50,5 @@ void freeNode(List *list, Node *p);
 int getInt(int *tar, char *tip);
 int confirm();
 void addvalue(List *list, int *total, char* tips);
+void freeAllNodes(const List *list);
 #endif

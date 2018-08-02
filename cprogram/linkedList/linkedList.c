@@ -27,7 +27,8 @@ int main(void)
             case INS: insertData(&list, &total); break;
             case EXIT: 
                 printf("确认退出？[y/n] ");
-                statu = confirm(); break;
+                statu = confirm(); 
+                freeAllNodes(&list); break;
             default: printf("抱歉，%d为非法选项。忘记选项了？尝试[0]显示系统帮助。\n", opt);
         }
     } while(statu == 1);
@@ -230,17 +231,21 @@ void addNode(List *list, int value)
 {
     //申请一块新内存，用于创建新节点
     Node *p = (Node*)malloc(sizeof(Node));
-    p->plast = list->ptail;
-    p->value = value;
-    p->pnext = NULL;
-    
-    if(list->phead == NULL) {   //无头节点时
-        list->phead = list->ptail = p;
-    } else {                    //存在头节点时
-        list->ptail = (list->ptail)->pnext = p;
+    if (p != NULL) {
+        p->plast = list->ptail;
+        p->value = value;
+        p->pnext = NULL;
+        
+        if(list->phead == NULL) {   //无头节点时
+            list->phead = list->ptail = p;
+        } else {                    //存在头节点时
+            list->ptail = (list->ptail)->pnext = p;
+        }
+    } else {
+        exit(-1);
     }
 }
-//插入一个节点, 传入插入位置的前节点地址、值value
+//插入一个或多个节点（一段链表）, 传入插入位置的前节点地址、值value
 void insertNode(List *list, int *total, int index)
 {
     int i;
@@ -412,4 +417,15 @@ void addvalue(List *list, int *total, char* tips)
     }
     while (getchar() != '\n');  //消耗剩余整行字符
     printf("成功%s%d个数据， 其中%d处忽略了无效数据\n", tips, cnt_y, cnt_n);
+}
+
+void freeAllNodes(const List *list)
+{
+    Node *p = (list->phead)->pnext;
+
+    for (; p->pnext != NULL; p = p->pnext) {
+        free(p->plast);
+    }
+    free(p->plast);
+    free(p);
 }
