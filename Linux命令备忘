@@ -1,0 +1,9 @@
+录屏(GUI)
+	simple-screen-recorder
+pip命令
+	报错一：提示"Could not install packages due to an EnvironmentError: Missing dependencies for SOCKS support."
+	解决：  让终端不走代理，即每次都将环境变量all_proxy和ALL_PROXY重置(可写入.bashrc里)
+		让终端始终走代理(推荐，因为下载一些东西的速度会快得多，例如pip下载numpy)或者重置一次后安装好pysocks(这样就不用写入.bashrc)【事实上已经安装好了】，然后修改.bashrc文件，添加"export all_proxy=socks5:127.0.0.1:1080"和"export ALL_PROXY=socks5:127.0.0.1:1080"
+	报错二：提示权限不够，建议检查权限或者增加--user参数
+	解决：  在install的后面增加--user参数，后面不需要跟用户名【每次都要，别忘记】
+
