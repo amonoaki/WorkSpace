@@ -3,7 +3,19 @@
 pip命令
 	报错一：提示"Could not install packages due to an EnvironmentError: Missing dependencies for SOCKS support."
 	解决：  让终端不走代理，即每次都将环境变量all_proxy和ALL_PROXY重置(可写入.bashrc里)
-		让终端始终走代理(推荐，因为下载一些东西的速度会快得多，例如pip下载numpy)或者重置一次后安装好pysocks(这样就不用写入.bashrc)【事实上已经安装好了】，然后修改.bashrc文件，添加"export all_proxy=socks5:127.0.0.1:1080"和"export ALL_PROXY=socks5:127.0.0.1:1080"
+	    	让终端始终走代理(推荐，因为下载一些东西的速度会快得多，例如pip下载numpy)，即安装好pysocks(遇到上一个问题可参考上面解决办法解决)，然后修改.bashrc文件，添加"export all_proxy=socks5://127.0.0.1:1080"和"export ALL_PROXY=socks5://127.0.0.1:1080"
 	报错二：提示权限不够，建议检查权限或者增加--user参数
 	解决：  在install的后面增加--user参数，后面不需要跟用户名【每次都要，别忘记】
+
+-------------------------------------------------------------------------------------------------------------------
+vim:
+    1. VIM插件安装: 找到该插件的GitHub的URL,将https://github.com后面的地址 xxx/yyy 作为Plugin参数写入~/.vimrc文件中. 有前例参照; 然后启动vim, 命令模式下输入  :PluginInstall  开始安装.符号  >  指示正在安装的插件, 符号  +  指示刚安装完毕的插件.
+    2. vim窗口分割: sp 上下分割, vsp 左右分割;
+       Ctrl-w 加方向键(h, j, k, l或方向控制键)跳转界面;
+       Ctrl-w 加 r 互换两个同一列两个分窗口的位置, Ctrl-w 加 x 互换同一行两个分窗口位置
+       Ctrl-w 加 + -改变字体大小(注意: + 要用shift才能输出)
+       Ctrl-w 加 < 或 > 增加减少宽度, Ctrl+w 加 = 所有窗口改为同等大小
+    3. 命令模式下, u 代表撤销, Ctrl-r 代表恢复(反撤销)
+    4. 命令模式下<F7>开关文件树, 命令模式下符号 ; 加 i 开关缩进的可视化显示, 命令模式下 ;+cc 行注释, ;+cu 取消注释, ;+cs 优美的注释, ;+cm 只用一组符号注释, ;+cy 注释并复制 (其中, 符号;为自定义的<leader>键,默认为符号\)
+    5. :set paste 进入粘贴模式, 进入插入模式后开始粘贴. :set nopaste 取消粘贴模式. 这可以避免在粘贴时缩进层层递进的混乱情况
 
