@@ -3,6 +3,10 @@
 
 test/
 
+.cproject
+.project
+.settings/
+
 *.o
 *.exe
 *.out
