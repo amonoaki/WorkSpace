@@ -8,41 +8,6 @@
 
 
 
-void countRow(const Tree *tree, int *floor, int *maxrow)
-{
-    
-	//创建临时树作为参数树的拷贝
-	Tree tempTree;
-	InitializeTree(&tempTree);
-	tempTree = *tree;
-
-	//记录临时树的根节点
-	Trnode *p = tempTree.root;
-
-	//递归遍历
-	if (TreeHasEmpty(&tempTree)) {  //无路可走,返回上一层
-        if (*maxrow < *floor) {
-            *maxrow = *floor;
-        }
-        (*floor)--;
-		return ;
-	} else {
-		if (p->left != NULL) {  //左边有路,往左走
-			tempTree.root = p->left;
-            (*floor)++;
-			countRow(&tempTree, floor, maxrow);
-		}
-		if (NULL != p->right) {  //右边有路,往右走
-			tempTree.root = p->right;
-            (*floor)++;
-			countRow(&tempTree, floor, maxrow);
-		}
-	}
-    (*floor)--;
-	return ;
-}
-
-
 
 int main(void)
 {
@@ -68,23 +33,26 @@ int main(void)
         AddTrnode(&tree, &items[i]);
     }
 
-    /*printf("TreeIsEmpty: %d\n", TreeIsEmpty(&tree));*/
-    /*printf("TreeHasEmpty: %d\n", TreeHasEmpty(&tree));*/
-    /*printf("TreeIsFull: %d\n", TreeIsFull(&tree));*/
-    /*printf("TreeHasFull: %d\n", TreeHasFull(&tree));*/
+    printf("TreeIsEmpty: %d\n", TreeIsEmpty(&tree));
+    printf("TreeHasEmpty: %d\n", TreeHasEmpty(&tree));
+    printf("TreeIsFull: %d\n", TreeIsFull(&tree));
+    printf("TreeHasFull: %d\n", TreeHasFull(&tree));
+
 
     printf("TrnodesCount: %d\n", TrnodesCount(&tree));
 
     printItems(&tree);
 
-    int floor = 1, maxrow = 1;
-    countRow(&tree, &floor, &maxrow);
-    printf("maxrow: %d\n", maxrow);
+//    int floor = 1, maxrow = 1;
+//    countRow(&tree, &floor, &maxrow);
+//    printf("maxrow: %d\n", maxrow);
+
+//    showTree(&tree);
 
     return 0;
 }
 
-void printItem(const Item item)
+static void printItem(const Item item)
 {
 	printf("name: %s, value: %d\n", item.name, item.value);
 }
@@ -94,3 +62,12 @@ void printItems(const Tree *tree)
 	TraverseWithParameter(tree, &printItem);
 }
 
+void readTreeFromFile()
+{
+
+}
+
+void saveTreeToFile()
+{
+
+}

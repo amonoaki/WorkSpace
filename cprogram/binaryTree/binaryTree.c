@@ -155,6 +155,11 @@ bool AddTrnode(Tree *tree, const Item *item)
     return true;
 }
 
+Trnode* SearchTrnode(const Tree *tree, const Item *item)
+{
+    
+}
+
 void TraverseWithParameter(const Tree *tree, void(*pfun)(Item item))
 {
 	//创建临时树作为参数树的拷贝

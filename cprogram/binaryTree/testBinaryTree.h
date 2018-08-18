@@ -7,7 +7,6 @@
 //enum options {HELP=0, ADD=1 };
 
 //函数原型
-void printItem(const Item item);  //打印一项
 void printItems(const Tree *tree);  //遍历打印所有项
 
 #endif
