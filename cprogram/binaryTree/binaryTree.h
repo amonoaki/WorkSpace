@@ -34,27 +34,29 @@ void InitializeTree(Tree *tree);
 
 //树是空的吗
 bool TreeIsEmpty(const Tree *tree);
-//树的两个节点都是空的吗
+//树的两个子节点都是空的吗
 bool TreeHasEmpty(const Tree *tree);
 //树是满的吗
 bool TreeIsFull(const Tree *tree);
-//树的两个节点都是满的吗
+//树的两个子节点都是满的吗
 bool TreeHasFull(const Tree *tree);
-
 //获得树的项数
 int TrnodesCount(const Tree *tree);
-//添加一个树节点
-bool AddTrnode(Tree *tree, const Item *item);
-//查找一个树节点
-Trnode* SearchTrnode(const Tree *tree, const Item *item);
 //项在树里吗
-bool InTree(const Tree *tree, const Item *item);
+//bool InTree(const Tree *tree, Item item);
+
+//添加一个树节点
+bool AddTrnode(Tree *tree, Item item);
+//查找一个树节点
+bool SearchTrnode(const Tree *tree, const char *name, Trnode **pnode, Trnode **plast);
 //删除一个树节点
-bool DeleteTrnode(Tree *tree, const Item *item);
+bool DeleteTrnode(Tree *tree, Item item);
+//打印节点
+void printTrnode(const Tree *tree);
+
 //删除所有树节点
 void DeleteAllTrnode(Tree *tree);
-
 //遍历树的工具, 传递一个函数, 函数会对每一项做处理
-void TraverseWithParameter(const Tree *tree, void(*pfun)(Item item));
+//void TraverseWithParameter(const Tree *tree, void(*pfun)(Item item));
 
 #endif

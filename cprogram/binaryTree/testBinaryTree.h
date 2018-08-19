@@ -4,9 +4,11 @@
 
 #include "binaryTree.h"
 
-//enum options {HELP=0, ADD=1 };
+enum options {QUIT=-1, HELP=0, ADD=1, SHOW=2, SEARCH=3};
 
 //函数原型
 void printItems(const Tree *tree);  //遍历打印所有项
+void addItems(Tree *tree);
+void searchItem(const Tree *tree);
 
 #endif
