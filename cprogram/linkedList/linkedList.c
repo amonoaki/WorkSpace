@@ -405,7 +405,7 @@ int getInt(int *tar, char *tip)
     while ((statu = scanf("%d", tar)) != 1) { //获得符合要求的输入为止
         printf("抱歉，%c非法。此处需要一个整数。\n", getchar());
         while (getchar() != '\n');  //消耗剩余整行字符
-        printf("请输入你的选项：");
+        printf("请输入%s：", tip);
     }
     while (getchar() != '\n');  //消耗剩余整行字符
 

@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 #define NAME_LENGTH 20
-#define MAX_TRNODES 10  //测试用定义的最大节点数量，可更改
+#define MAX_TRNODES 15  //测试用定义的最大节点数量，可更改
 
 /*实体定义*/
 typedef struct _item
@@ -48,12 +48,13 @@ int TrnodesCount(const Tree *tree);
 //添加一个树节点
 bool AddTrnode(Tree *tree, Item item);
 //查找一个树节点
-bool SearchTrnode(const Tree *tree, const char *name, Trnode **pnode, Trnode **plast);
+bool SearchTrnode(const Tree *tree, Item item, Trnode **pnode, Trnode **plast);
 //删除一个树节点
 bool DeleteTrnode(Tree *tree, Item item);
 //打印节点
 void printTrnode(const Tree *tree);
 
+//优化二叉树(平衡二叉树)
 //删除所有树节点
 void DeleteAllTrnode(Tree *tree);
 //遍历树的工具, 传递一个函数, 函数会对每一项做处理

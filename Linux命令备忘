@@ -14,7 +14,14 @@ at 设置定时任务
 
 wc 统计文件里面有多少单词，多少行，多少字符。 -l  ：仅列出行；     -w  ：仅列出多少字(英文单字)；     -m  ：多少字符；
 gcc 编译代码时,如果代码include了数学库, 要加选项 -lm , 如果要使用 gdb 进行调试, 在编译的时候要加 -g 选项
+命令行更换壁纸: gsettings set org.gnome.desktop.background picture-uri 'file:/...'
+                gsettings get org.gnome.desktop.background picture-uri 回车看到的是当前使用壁纸的路径
+hown命令来改变文件所有者及用户组，chgrp命令来改变文件所在用户组, 格式: chown [-R] 账号名称:用户组名称 文件或目录; chgrp 类似
 
+
+crontab循环任务设置: 可以把脚本放在/etc/cron.hourly、/etc/cron.daily、/etc/cron.weekly、/etc/cron.monthly目录中，让它每小时/天/星期、月执行一次。
+
+gsettings won't work from cron, however. you need to set the DBUS_SESSION_BUS_ADDRESS environment variable in order for gsettings to work. You can do that by adding these two lines before gsettings (lines separate by semicolons:) PID=$(pgrep gnome-session); export DBUS_SESSION_BUS_ADDRESS=$(grep -z DBUS_SESSION_BUS_ADDRESS /proc/$PID/environ|cut -d= -f2-); – willbradley Jan 13 at 0:25 
 -------------------------------------------------------------------------------------------------------------------
 vim:
     1. VIM插件安装: 找到该插件的GitHub的URL,将https://github.com后面的地址 xxx/yyy 作为Plugin参数写入~/.vimrc文件中. 有前例参照; 然后启动vim, 命令模式下输入  :PluginInstall  开始安装.符号  >  指示正在安装的插件, 符号  +  指示刚安装完毕的插件.
@@ -34,5 +41,6 @@ vim:
     7. vim和shell切换
         :shell 不关闭vi切换到命令行
         :exit  从shell回到vim   7. vim跨文件复制粘贴: 命令模式下输入  "a  后面跟上如yy等复制操作, 在另一个文件中命令模式下输入  "a  后面跟上如p等粘贴操作即可
+    8. vim内容复制到系统剪贴板, 使用    " + 字母     作为此次内容的标记
 -------------------------------------------------------------------------------------------------------------------
 
