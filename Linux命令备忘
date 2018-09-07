@@ -1,29 +1,59 @@
-录屏(GUI)
+#录屏(GUI)
 	simple-screen-recorder
-pip命令
+#pip命令
 	报错一：提示"Could not install packages due to an EnvironmentError: Missing dependencies for SOCKS support."
 	解决：  让终端不走代理，即每次都将环境变量all_proxy和ALL_PROXY重置(可写入.bashrc里)
 	    	让终端始终走代理(推荐，因为下载一些东西的速度会快得多，例如pip下载numpy)，即安装好pysocks(遇到上一个问题可参考上面解决办法解决)，然后修改.bashrc文件，添加"export all_proxy=socks5://127.0.0.1:1080"和"export ALL_PROXY=socks5://127.0.0.1:1080"
 	报错二：提示权限不够，建议检查权限或者增加--user参数
 	解决：  在install的后面增加--user参数，后面不需要跟用户名【每次都要，别忘记】
-at 设置定时任务
+#at 设置定时任务
     at 后面加时间如(now+30minutes),然后会进入at的交互界面,在交互界面里输入到时要执行的任务如(echo "hello" > hello.txt), 每行命令一次执行. 按Ctrl-d保存退出.
     注意:如果命令涉及图形界面显示如(运行一个GUI程序),则要指定显示器, 即在执行命令前将指示显示器的环境变量改为当前显示屏(export DISPLAY=:1), 如(export DISPLAY=:1 && /home/ubuntu/alarm.py "测试")
          并且, 系统休眠等命令需要在root用户下才能正常执行
     将at命令写进脚本: 使用管道, 将at要执行的命令以字符串的形式通过管道 echo 过去, 如(echo "echo '123' > test.txt" | at now+1minute)
 
-wc 统计文件里面有多少单词，多少行，多少字符。 -l  ：仅列出行；     -w  ：仅列出多少字(英文单字)；     -m  ：多少字符；
-gcc 编译代码时,如果代码include了数学库, 要加选项 -lm , 如果要使用 gdb 进行调试, 在编译的时候要加 -g 选项
-命令行更换壁纸: gsettings set org.gnome.desktop.background picture-uri 'file:/...'
-                gsettings get org.gnome.desktop.background picture-uri 回车看到的是当前使用壁纸的路径
-hown命令来改变文件所有者及用户组，chgrp命令来改变文件所在用户组, 格式: chown [-R] 账号名称:用户组名称 文件或目录; chgrp 类似
+#wc 统计文件里面有多少单词，多少行，多少字符。
+    -l  ：仅列出行；     -w  ：仅列出多少字(英文单字)；     -m  ：多少字符；
+#gcc 编译代码时
+    如果代码include了数学库, 要加选项 -lm , 如果要使用 gdb 进行调试, 在编译的时候要加 -g 选项
+#命令行更换壁纸:
+    gsettings set org.gnome.desktop.background picture-uri 'file:/...'
+    gsettings get org.gnome.desktop.background picture-uri 回车看到的是当前使用壁纸的路径
+#文件所有组所有者管理
+    hown命令来改变文件所有者及用户组，chgrp命令来改变文件所在用户组, 格式: chown [-R] 账号名称:用户组名称 文件或目录; chgrp 类似
 
 
-crontab循环任务设置: 可以把脚本放在/etc/cron.hourly、/etc/cron.daily、/etc/cron.weekly、/etc/cron.monthly目录中，让它每小时/天/星期、月执行一次。
+#crontab循环任务设置: 
+    可以把脚本放在/etc/cron.hourly、/etc/cron.daily、/etc/cron.weekly、/etc/cron.monthly目录中，让它每小时/天/星期、月执行一次。
+#创建链接(软连接, 硬链接)
+    ln -s source dist        # 建立软连接
+    ln source dist            # 建立硬连接
+#dpkg安装软件包(如.deb)
+    dpkg -i packagename.deb
+#解压.tar.gz结尾的压缩包:
+    tar -xzf file.tar.gz
+#正则匹配汉字
+    [\u4e00-\u9fa5]{2,}   #将匹配 2 个以上的汉字
+    re.match(r'正则', '字符串') re.search(正则, 字符串)   #match从开头匹配,开头不对则返回空
 
-gsettings won't work from cron, however. you need to set the DBUS_SESSION_BUS_ADDRESS environment variable in order for gsettings to work. You can do that by adding these two lines before gsettings (lines separate by semicolons:) PID=$(pgrep gnome-session); export DBUS_SESSION_BUS_ADDRESS=$(grep -z DBUS_SESSION_BUS_ADDRESS /proc/$PID/environ|cut -d= -f2-); – willbradley Jan 13 at 0:25 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 -------------------------------------------------------------------------------------------------------------------
-vim:
+#vim命令备忘:
     1. VIM插件安装: 找到该插件的GitHub的URL,将https://github.com后面的地址 xxx/yyy 作为Plugin参数写入~/.vimrc文件中. 有前例参照; 然后启动vim, 命令模式下输入  :PluginInstall  开始安装.符号  >  指示正在安装的插件, 符号  +  指示刚安装完毕的插件.
     2. vim窗口分割: sp 上下分割, vsp 左右分割;
        Ctrl-w 加方向键(h, j, k, l或方向控制键)跳转界面;
