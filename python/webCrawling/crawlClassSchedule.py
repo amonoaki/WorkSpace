@@ -107,7 +107,7 @@ class ResolvePage:
         classes = []
 
         #取下包含了课表内容的源码
-        rows = self.soup.findAll('tr')[4:17]
+        rows = self.soup.findAll('tr')[4:-14]
         for row in rows:
             columns = row.findAll('td')
             for column in columns:
@@ -145,7 +145,7 @@ class ResolvePage:
         total = []
 
         #取下包含了课表内容的源码, 取下分数内容
-        rows1 = self.soup.findAll('tr')[1:12]
+        rows1 = self.soup.findAll('tr')[1:-3]
         row2 = self.soup.findAll('tr')[-3]
 
         for row in rows1:
