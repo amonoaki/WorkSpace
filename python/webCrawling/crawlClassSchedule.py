@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import getpass  #用来输入不可见密码
+from prettytable import PrettyTable  #用来打印整齐的表格
 import re
 import requests
 from bs4 import BeautifulSoup
@@ -14,7 +15,7 @@ class Crawling:
             'Connection': 'keep-alive'}  #记录headers, 伪装成浏览器访问. 'referer'的值要依据网页添加
     checkcodePath = './code.png'  #验证码保存路径
     checkcodeURL = originURL+'CheckCode.aspx'  #验证码网址
-    session = None #一个会话, 让cookie得以保存传递. 后面都使用这个session进行post和get.
+    session = None #一个会话, 让cookie得以保存传递. 后面都使用这个session进行post和get
 
     #personal data
     __originData = {'Button1':''} #登录时要提交的数据: 用户名, 密码, '__VIEWSTATE'的值要从登录页源码中提取, 'txtSecretCode'(验证码)的值要手工输入
@@ -196,9 +197,14 @@ if __name__ == '__main__':
             #显示课表
             print("\n%s的课表:" % name)
             print('第%s学年 第%s学期' % (schedule[0], schedule[1]))
-            print("课名\t\t\t类型\t\t时间\t\t\t地点\t教师")
+            scheduleTable = PrettyTable(['课名', '类型', '时间', '地点', '教师'])
+            scheduleTable.align='l'
             for i in schedule[2]:
-                print("%s\t\t%s\t%s\t%s\t%s" % (i[0],i[1],i[2],i[4],i[3]))
+                scheduleTable.add_row([i[0],i[1],i[2],i[4],i[3]])
+            print(scheduleTable)
+            # print("课名\t\t\t类型\t\t时间\t\t\t地点\t教师")
+            # for i in schedule[2]:
+                # print("%s\t\t%s\t%s\t%s\t%s" % (i[0],i[1],i[2],i[4],i[3]))
         elif option == '2':
             year = input("请输入要查询的学年(如2017-2018): ")
             semester = input("请输入是%s学年的第几学期(如2): " % year)
@@ -210,9 +216,14 @@ if __name__ == '__main__':
             #显示成绩
             print("\n%s的成绩:" % name)
             print('第%s学年 第%s学期' % (year, semester))
-            print("课名\t\t\t类型\t\t\t绩点\t平时\t期末\t实验\t总评")
+            gradeTable = PrettyTable(['课名', '类型', '绩点', '平时', '期末', '实验', '总评'])
+            gradeTable.align='l'
             for i in grades:
-                print("%s\t\t%s\t%s \t%s\t%s\t%s\t%s" % (i[3],i[4],i[7],i[8],i[10],i[11],i[12]))
+                gradeTable.add_row([i[3],i[4],i[7],i[8],i[10],i[11],i[12]])
+            print(gradeTable)
+            # print("课名\t\t\t类型\t\t\t绩点\t平时\t期末\t实验\t总评")
+            # for i in grades:
+                # print("%s\t\t%s\t%s \t%s\t%s\t%s\t%s" % (i[3],i[4],i[7],i[8],i[10],i[11],i[12]))
             print("综合情况:  %s,  %s,  %s" % (total[0],total[1],total[2]))
         else:
             print("无效选项")
