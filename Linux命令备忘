@@ -35,7 +35,37 @@
 #正则匹配汉字
     [\u4e00-\u9fa5]{2,}   #将匹配 2 个以上的汉字
     re.match(r'正则', '字符串') re.search(正则, 字符串)   #match从开头匹配,开头不对则返回空
-
+#休眠命令
+    pm-suspend  #root用户下
+#Bash快捷键
+    https://github.com/hokein/Wiki/wiki/Bash-Shell%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE
+    移动光标
+    ctrl+b: 前移一个字符(backward)
+    ctrl+f: 后移一个字符(forward)
+    alt+b: 前移一个单词
+    alt+f: 后移一个单词
+    ctrl+a: 移到行首（a是首字母）
+    ctrl+e: 移到行尾（end）
+    ctrl+xx: 行首到当前光标替换
+    编辑命令
+    alt+.: 粘帖最后一次命令最后的参数（通常用于mkdir long-long-dir后, cd配合着alt+.）
+    alt+d: 删除当前光标到临近右边单词开始(delete)
+    ctrl+w: 删除当前光标到临近左边单词结束(word)
+    ctrl+h: 删除光标前一个字符（相当于backspace）
+    ctrl+d: 删除光标后一个字符（相当于delete）
+    ctrl+u: 删除光标左边所有
+    ctrl+k: 删除光标右边所有
+    ctrl+l: 清屏
+    ctrl+shift+c: 复制（相当于鼠标左键拖拽）
+    ctrl+shift+v: 粘贴（相当于鼠标中键）
+    其它
+    ctrl+n: 下一条命令
+    ctrl+p: 上一条命令
+    alt+n: 下一条命令（例如输入ls, 然后按'alt+n', 就会找到历史记录下的ls命令）
+    alt+p: 上一条命令（跟alt+n相似）
+    shift+PageUp: 向上翻页
+    shift+PageDown: 向下翻页
+    ctrl+r: 进入历史查找命令记录， 输入关键字。 多次按返回下一个匹配项
 
 
 
@@ -54,6 +84,7 @@
     
 -------------------------------------------------------------------------------------------------------------------
 #vim命令备忘:
+#运行vimtutor
     1. VIM插件安装: 找到该插件的GitHub的URL,将https://github.com后面的地址 xxx/yyy 作为Plugin参数写入~/.vimrc文件中. 有前例参照; 然后启动vim, 命令模式下输入  :PluginInstall  开始安装.符号  >  指示正在安装的插件, 符号  +  指示刚安装完毕的插件.
     2. vim窗口分割: sp 上下分割, vsp 左右分割;
        Ctrl-w 加方向键(h, j, k, l或方向控制键)跳转界面;
