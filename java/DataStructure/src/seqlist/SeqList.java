@@ -50,7 +50,7 @@ public class SeqList<T>
 			throw new IndexOutOfBoundsException(index+"OutOfBound");
 		}
 	}
-	public String toString() {
+	public String toString() {  //重写toString
 		String str = getClass().getName()+"(";
 		if (this.n > 0) {  //先打印第一个元素, 防止逗号多余
 			str += this.element[0].toString();
