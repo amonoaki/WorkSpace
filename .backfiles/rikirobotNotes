@@ -1,0 +1,21 @@
+启动底盘节点：roslaunch rikirobot bringup.launch
+启动键盘控制节点：rosrun tele[op_twist_keyboard teleop_twist_keyboard]
+启动物体跟随:
+    启动跟随节点：roslaunch riki_follower [follower.launch, kinect_follower.launch, precipio_follower.launch]
+构建地图：
+	启动底盘节点
+	启动地图绘制节点：roslaunch rikirobot astra_xti[on_gmapping.launch]
+	启动rviz
+	导入绘制地图的配置文件：File-->Open config-->(路径：~/catkin_ws/src/rikirobot_project/rikirobot/rviz/navigate.rviz)
+	启动键盘控制节点，将地图绘制完整
+	运行rikirobot包下(roscd)目录/maps下的map.sh以保存地图
+自动导航：
+	启动底盘节点
+	启动导航节点：roslaunch rikirobot astra_nav[igate.launch]
+	启动rviz
+	导入配置文件：同上
+	在rviz中，使用 2D pose Estimate 调整初始定位，使用 2D Nav Goal 标记目标位置
+
+
+rikirobot 密码： aaaa7980
+
