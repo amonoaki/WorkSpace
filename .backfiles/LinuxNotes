@@ -1,5 +1,8 @@
 #录屏(GUI)
 	simple-screen-recorder
+#音频pcm与wav互转
+	wav转pcm: ffmpeg -i input.wav -f s16be -ar 8000 -acodec pcm_s16be output.raw
+	pcm转wav: ffmpeg -f s16be -ar 8000 -ac 2 -acodec pcm_s16be -i input.raw output.wav
 #pip命令
 	报错一：提示"Could not install packages due to an EnvironmentError: Missing dependencies for SOCKS support."
 	解决：  让终端不走代理，即每次都将环境变量all_proxy和ALL_PROXY重置(可写入.bashrc里)
