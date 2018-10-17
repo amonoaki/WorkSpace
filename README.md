@@ -1,5 +1,5 @@
 # WorkSpace
-日常各类项目代码存放空间(环境由Windows转为Ubuntu)<br>
+日常各类项目代码存放空间<br>
 目录:<br>
 ```
 WorkSpace/
