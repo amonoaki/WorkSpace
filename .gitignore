@@ -1,7 +1,7 @@
 .vs
 .vscode
 
-test/
+.DoNotSync/
 
 .cproject
 .project
