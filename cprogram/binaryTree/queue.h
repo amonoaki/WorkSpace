@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include "binaryTree.h"
 
-
+//定义结构体类型
 typedef struct _node
 {
     struct _item item;
@@ -19,9 +19,11 @@ typedef struct _queue
 
 
 //声明队列具有的操作
-void InitializeQueue(Queue *queue);
-Item* NewData(const char* name, int number);
-Queue* NewQueue();
+Item* NewData(const char* name, int number);  //创建空数据
+Queue* NewQueue();  //创建空队列节点
+
+void InitializeQueue(Queue *queue);  //初始化队列
+
 bool IsEmpty(const Queue *queue);  //检查队列是否为空
 int GetLength(const Queue *queue);  //得到队列长度
 

@@ -20,9 +20,10 @@ static void printLines(FILE *fp, char opt, int num);
 void showTree(const Tree *tree, FILE *fp)
 {
 	int floor = 0;
-	if (fp != stdout) {
+
+	if (fp == NULL) {
 		fp = fopen("./tree.txt", "w");
-	}  //如果非标准输出则默认输出到程序当前执行路径
+	}  //如果未指定文件句柄则默认输出到程序当前执行路径
 
 	//外层队列
 	QueueQueue queueQueue;
@@ -54,7 +55,12 @@ void showTree(const Tree *tree, FILE *fp)
 
 	if (fp != stdout) {
 		fclose(fp);  //关闭文件句柄
-		printf("tree.txt文件已保存到程序当前执行路径\n");
+		if (fp == NULL) {
+			printf("tree.txt数据文件已保存到程序当前执行路径\n");
+		}
+		else {
+			printf("数据已保存到指定文件\n");
+		}
 	}
 }
 
