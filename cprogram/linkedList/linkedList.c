@@ -96,8 +96,8 @@ void prtData(const List *list)
     }
     printf("共%d条记录\n\n", cnt);
 }
-//打印给定节点数组的数据，传入list, 节点数组，数组长度，开始的序号 （标准输出）
-void prtDataInArray(const List *list, Node** pnodes, int length, int beginNum)
+//打印给定节点数组的数据，节点数组，数组长度，开始的序号 （标准输出）
+void prtDataInArray(Node** pnodes, int length, int beginNum)
 {
     int i, cnt = beginNum;
 
@@ -175,12 +175,12 @@ void delData(List* list)
 //改
 void modData(const List *list)
 {
-    int lowerNumber, upperNumber, length, newValue;
+    int lowerNumber, upperNumber, length;
     Node* pnodes[list->total];
 
     getInt(&lowerNumber, "开始修改的索引值");
     getInt(&upperNumber, "停止修改的索引值");
-    if (length = SearchNodeIndex(list, lowerNumber, upperNumber, pnodes)) {
+    if ((length = SearchNodeIndex(list, lowerNumber, upperNumber, pnodes)) != 0) {
         ModifyNode(pnodes, length, lowerNumber);
         printf("全部修改完成\n");
         saveData(list);
@@ -192,7 +192,7 @@ void modData(const List *list)
 //查
 void seaData(const List *list)
 {
-    int opt, value, i, cnt = 0;
+    int opt, value, cnt = 0;
     Node* pnodes[list->total];
     int lowerNumber = 0, upperNumber = 0;
 
@@ -217,7 +217,7 @@ void seaData(const List *list)
             continue;
         }
     }
-    prtDataInArray(list, pnodes, cnt, lowerNumber);
+    prtDataInArray(pnodes, cnt, lowerNumber);
 }
 
 
@@ -254,7 +254,6 @@ void AddNode(List *list, int value)
 //插入一个或多个节点（一段链表）, 传入插入位置前一个节点的索引
 void InsertNode(List *list, int index)
 {
-    int i;
     Node *pindex = list->phead;
 
     //定位index指向的节点地址
@@ -296,7 +295,7 @@ int RmNodeIndex(List *list, int lowerNumber, int upperNumber)
     Node* pnodes[list->total];
     int i, cnt = 0;
 
-    if (cnt = SearchNodeIndex(list, lowerNumber, upperNumber, pnodes)) {
+    if ((cnt = SearchNodeIndex(list, lowerNumber, upperNumber, pnodes)) != 0) {
         for (i = 0; i < cnt; i++) {
             freeNode(list, pnodes[i]);
         }

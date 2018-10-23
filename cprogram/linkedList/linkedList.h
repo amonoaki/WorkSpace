@@ -38,7 +38,7 @@ void FreeAllNodes(const List *list);
 //数据(user's data)
 void prtTips();
 void prtData(const List *list);
-void prtDataInArray(const List *list, Node** pnodes, int length, int beginNum);
+void prtDataInArray(Node** pnodes, int length, int beginNum);
 
 void readData(List *list);
 void saveData(const List *list);
