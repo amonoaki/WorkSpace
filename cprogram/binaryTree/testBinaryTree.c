@@ -1,10 +1,12 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "binaryTree.h"
 #include "testBinaryTree.h"
-//#include "showTree.h"
+#include "showTree.h"
 
 static int getInt(int *tar, char *tip);
 static bool confirm();
@@ -20,11 +22,11 @@ int main(void)
 
     readTreeFromFile(&tree);
 
-    printf("æ¬¢è¿æ¥åˆ°äºŒå‰æ ‘æµ‹è¯•ç³»ç»Ÿ");
+    printf("»¶Ó­À´µ½¶ş²æÊ÷²âÊÔÏµÍ³");
     help();
 
     do {
-        getInt(&option, "ä½ çš„é€‰é¡¹");
+        getInt(&option, "ÄãµÄÑ¡Ïî");
 
         switch (option) {
             case HELP: help(); break;
@@ -33,27 +35,29 @@ int main(void)
             case SEARCH: searchItem(&tree); break;
             case DELETE: deleteItem(&tree); break;
             case QUIT: quit = quitConfirm(); break;
-            default: printf("æ— æ•ˆé€‰é¡¹\n"); break;
+			case PRINT_TO_FILE: showTree(&tree, NULL); break;
+			case PRINT_TO_SCREEN: showTree(&tree, stdout); break;
+            default: printf("ÎŞĞ§Ñ¡Ïî\n"); break;
         }
     } while(!quit);
     DeleteAllTrnode(&tree);
-    printf("å·²é€€å‡º\n");
+    printf("ÒÑÍË³ö\n");
 
     return 0;
 }
 
-//æ‰“å°æ•°æ®
+//´òÓ¡Êı¾İ
 void printItems(const Tree *tree)
 {
     printf("\nname\t\t\t value\t\t Trnode\t\t\t left\t\t\t right\n\n");
     printTrnode(tree);
-    printf("å…±%dæ¡è®°å½•\n\n", TrnodesCount(tree));
+    printf("¹²%dÌõ¼ÇÂ¼\n\n", TrnodesCount(tree));
 }
-//å¢åŠ æ•°æ®
+//Ôö¼ÓÊı¾İ
 void addItems(Tree *tree)
 {
     if (TreeIsFull(tree)) {
-        printf("ç©ºé—´å·²æ»¡, æ— æ³•ç»§ç»­è¾“å…¥\n");
+        printf("¿Õ¼äÒÑÂú, ÎŞ·¨¼ÌĞøÊäÈë\n");
         return;
     }
 
@@ -61,7 +65,7 @@ void addItems(Tree *tree)
     int value = 0;
     Item item;
 
-    printf("å¢åŠ : è¾“å…¥name, value. ç©ºæ ¼éš”å¼€, # å›è½¦ ç»“æŸ\n");
+    printf("Ôö¼Ó: ÊäÈëname, value. ¿Õ¸ñ¸ô¿ª, # »Ø³µ ½áÊø\n");
 
     scanf("%s", name);
     while (0 != strcmp(name, "#")) {
@@ -78,13 +82,13 @@ void addItems(Tree *tree)
     }
     saveTreeToFile(tree);
 }
-//æŸ¥æ‰¾æ•°æ®
+//²éÕÒÊı¾İ
 void searchItem(const Tree *tree)
 {
     char name[NAME_LENGTH];
     Trnode *pnode = NULL, *plast = NULL;
 
-    printf("æŸ¥æ‰¾: è¾“å…¥name:");
+    printf("²éÕÒ: ÊäÈëname:");
     scanf("%s", name);
     
     Item item;
@@ -95,15 +99,15 @@ void searchItem(const Tree *tree)
         printf("\nname\t\t\t value\t\t left\t\t\t right\n\n");
         printf("%-20s\t %-10d\t %-15p\t %-15p\n",(pnode->item).name, (pnode->item).value, pnode->left, pnode->right);
     } else {
-        printf("æ— ç»“æœ\n");
+        printf("ÎŞ½á¹û\n");
     }
 }
-//åˆ é™¤æ•°æ®
+//É¾³ıÊı¾İ
 void deleteItem(Tree *tree)
 {
     char name[NAME_LENGTH];
 
-    printf("åˆ é™¤: è¾“å…¥name:");
+    printf("É¾³ı: ÊäÈëname:");
     scanf("%s", name);
     
     Item item;
@@ -115,20 +119,20 @@ void deleteItem(Tree *tree)
     saveTreeToFile(tree);
 }
 
-//æ‰“å°æç¤º
+//´òÓ¡ÌáÊ¾
 void help()
 {
-    printf("å¯ç”¨é€‰é¡¹: -1:é€€å‡º 0:æ˜¾ç¤ºå¸®åŠ© 1:å¢åŠ æ•°æ® 2:æ˜¾ç¤ºæ•°æ® 3:æŸ¥æ‰¾æ•°æ® 4:åˆ é™¤æ•°æ®\n");
+    printf("¿ÉÓÃÑ¡Ïî: -1:ÍË³ö 0:ÏÔÊ¾°ïÖú 1:Ôö¼ÓÊı¾İ 2:ÏÔÊ¾Êı¾İ 3:²éÕÒÊı¾İ 4:É¾³ıÊı¾İ 5:Í¼ĞÎ»¯´òÓ¡Êı¾İµ½ÖÕ¶Ë 6:Í¼ĞÎ»¯´òÓ¡Êı¾İµ½ÎÄ¼ş\n");
 }
-//é€€å‡º
+//ÍË³ö
 bool quitConfirm ()
 {
-    printf("ç¡®è®¤é€€å‡º?[y/n]");
+    printf("È·ÈÏÍË³ö?[y/n]");
     return confirm();
 }
 
 
-//ä»æ–‡ä»¶è¯»å–æ•°æ® data.txt
+//´ÓÎÄ¼ş¶ÁÈ¡Êı¾İ data.txt
 void readTreeFromFile(Tree *tree)
 {
     FILE *pdata = fopen("./data.txt", "a+");
@@ -148,10 +152,10 @@ void readTreeFromFile(Tree *tree)
     }
 
     fclose(pdata);
-    printf("æ•°æ®è¯»å–å®Œæ¯•, å…±%dæ¡è®°å½•\n", TrnodesCount(tree));
+    printf("Êı¾İ¶ÁÈ¡Íê±Ï, ¹²%dÌõ¼ÇÂ¼\n", TrnodesCount(tree));
 }
 
-//ä¿å­˜æ•°æ®åˆ°æ–‡ä»¶ data.txt
+//±£´æÊı¾İµ½ÎÄ¼ş data.txt
 static void saveTree(FILE *pdata, const Tree *tree)
 {
 
@@ -160,26 +164,26 @@ static void saveTree(FILE *pdata, const Tree *tree)
         return;
     }
 
-	//åˆ›å»ºä¸´æ—¶æ ‘ä½œä¸ºå‚æ•°æ ‘çš„æ‹·è´
+	//´´½¨ÁÙÊ±Ê÷×÷Îª²ÎÊıÊ÷µÄ¿½±´
 	Tree tempTree;
 	InitializeTree(&tempTree);
 	tempTree = *tree;
 
-	//è®°å½•ä¸´æ—¶æ ‘çš„æ ¹èŠ‚ç‚¹
+	//¼ÇÂ¼ÁÙÊ±Ê÷µÄ¸ù½Úµã
 	Trnode *p = tempTree.root;
 
-	//é€’å½’éå†
-	if (TreeHasEmpty(&tempTree)) {  //æ— è·¯å¯èµ°,è¿”å›ä¸Šä¸€å±‚
+	//µİ¹é±éÀú
+	if (TreeHasEmpty(&tempTree)) {  //ÎŞÂ·¿É×ß,·µ»ØÉÏÒ»²ã
         fprintf(pdata, "%s %d ",(p->item).name, (p->item).value);
 		return ;
 	} else {
-        //è¿™é‡Œå¿…é¡»åœ¨é€’å½’å‰å¤„ç†, æ‰“å°çš„é¡ºåºè¦å’Œå½“åˆè¾“å…¥çš„é¡ºåºç›¸åŒ, å¦åˆ™æ ‘çš„ç»“æ„å°†è¢«æ”¹å˜
+        //ÕâÀï±ØĞëÔÚµİ¹éÇ°´¦Àí, ´òÓ¡µÄË³ĞòÒªºÍµ±³õÊäÈëµÄË³ĞòÏàÍ¬, ·ñÔòÊ÷µÄ½á¹¹½«±»¸Ä±ä
         fprintf(pdata, "%s %d ",(p->item).name, (p->item).value);
-		if (p->left != NULL) {  //å·¦è¾¹æœ‰è·¯,å¾€å·¦èµ°
+		if (p->left != NULL) {  //×ó±ßÓĞÂ·,Íù×ó×ß
 			tempTree.root = p->left;
 		    saveTree(pdata, &tempTree);
 		}
-		if (NULL != p->right) {  //å³è¾¹æœ‰è·¯,å¾€å³èµ°
+		if (NULL != p->right) {  //ÓÒ±ßÓĞÂ·,ÍùÓÒ×ß
 			tempTree.root = p->right;
 			saveTree(pdata, &tempTree);
 		}
@@ -197,23 +201,23 @@ void saveTreeToFile(const Tree *tree)
 
 
 
-/*å·¥å…·*/
-//è·å¾—ä¸€ä¸ªæ•´æ•°ï¼Œä¼ å…¥ç›®æ ‡å˜é‡åœ°å€å’Œæç¤ºå­—ç¬¦ä¸²ï¼Œå°†æœ€åä¸€æ¬¡scanfçš„è¿”å›å€¼è¿”å›
+/*¹¤¾ß*/
+//»ñµÃÒ»¸öÕûÊı£¬´«ÈëÄ¿±ê±äÁ¿µØÖ·ºÍÌáÊ¾×Ö·û´®£¬½«×îºóÒ»´ÎscanfµÄ·µ»ØÖµ·µ»Ø
 static int getInt(int *tar, char *tip)
 {
     int statu;
 
-    printf("è¯·è¾“å…¥%sï¼š", tip);
-    while ((statu = scanf("%d", tar)) != 1) { //è·å¾—ç¬¦åˆè¦æ±‚çš„è¾“å…¥ä¸ºæ­¢
-        printf("æŠ±æ­‰ï¼Œ%céæ³•ã€‚æ­¤å¤„éœ€è¦ä¸€ä¸ªæ•´æ•°ã€‚\n", getchar());
-        while (getchar() != '\n');  //æ¶ˆè€—å‰©ä½™æ•´è¡Œå­—ç¬¦
-        printf("è¯·è¾“å…¥%sï¼š", tip);
+    printf("ÇëÊäÈë%s£º", tip);
+    while ((statu = scanf("%d", tar)) != 1) { //»ñµÃ·ûºÏÒªÇóµÄÊäÈëÎªÖ¹
+        printf("±§Ç¸£¬%c·Ç·¨¡£´Ë´¦ĞèÒªÒ»¸öÕûÊı¡£\n", getchar());
+        while (getchar() != '\n');  //ÏûºÄÊ£ÓàÕûĞĞ×Ö·û
+        printf("ÇëÊäÈë%s£º", tip);
     }
-    while (getchar() != '\n');  //æ¶ˆè€—å‰©ä½™æ•´è¡Œå­—ç¬¦
+    while (getchar() != '\n');  //ÏûºÄÊ£ÓàÕûĞĞ×Ö·û
 
     return statu;
 }
-//ç¡®è®¤æ˜¯å¦æ‰§è¡Œæ“ä½œï¼Œç”¨æˆ·è¾“å…¥yè¿”å›-1ï¼Œå¦åˆ™è¿”å›1
+//È·ÈÏÊÇ·ñÖ´ĞĞ²Ù×÷£¬ÓÃ»§ÊäÈëy·µ»Ø-1£¬·ñÔò·µ»Ø1
 static bool confirm()
 {
     char choice;
