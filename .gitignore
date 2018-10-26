@@ -1,12 +1,3 @@
-.vs
-.vscode
-
-.DoNotSync/
-
-.cproject
-.project
-.settings/
-
 *.o
 *.exe
 *.out
