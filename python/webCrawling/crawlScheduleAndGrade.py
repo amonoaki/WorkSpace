@@ -16,7 +16,6 @@ class Crawling:
     checkcodePath = './code.png'  #验证码保存路径
     checkcodeURL = originURL+'CheckCode.aspx'  #验证码网址
     session = None #一个会话, 让cookie得以保存传递. 后面都使用这个session进行post和get
-
     #personal data
     __originData = {'Button1':''} #登录时要提交的数据: 用户名, 密码, '__VIEWSTATE'的值要从登录页源码中提取, 'txtSecretCode'(验证码)的值要手工输入
     __name = ''
@@ -104,34 +103,18 @@ class ResolvePage:
         return scheduleTime
 
     def resolveScheduleContent(self):
-        classes = []
-
-        #取下包含了课表内容的源码
-        rows = self.soup.findAll('tr')[4:-14]
-        for row in rows:
-            columns = row.findAll('td')
-            for column in columns:
-                if column.get('align') == 'Center' and column.text != '\xa0':
-                    classes.append(str(column))
-
-        #去除无用部分,留下<\br>用来分隔各项
-        for i in range(len(classes)):
-            index = classes[i].find('>')+1
-            classes[i] = classes[i][index:-5]
-        #合为一个字符串
-        classes = '<br/>'.join(classes)
-        #按分隔符拆开为列表
-        classes =re.split(r'<br/><br/>|<br/>', classes)  #按正则表达式分割, | 为或, 遵循短路原则, 所以 | 两边顺序不可变换
-
-        #按科目拆开
+        
         subject = []
         schedule = []
-        for i in range(len(classes)):
-            subject.append(classes[i])
-            if (i+1)%5 == 0:
-                schedule.append(subject)
-                subject = []
 
+        list_table = self.soup.findAll('table')[1].findAll('td', rowspan=True, align=True)
+        for sub in list_table:
+            for item in sub.strings:
+                subject.append(str(item))  #注意要强制转换
+                if len(subject) == 5:
+                    schedule.append(subject)
+                    subject = []
+                    
         return schedule
 
     def resolveSchedule(self):
@@ -141,35 +124,26 @@ class ResolvePage:
         return (scheduleTime[0], scheduleTime[1], schedule)
     
     def resolveGradeContent(self):
-        gradePage = []
+        
+        #total
         total = []
+        total_data = self.soup.findAll('table')[1].findAll(height='13')[:-1]
+        for i in total_data:
+            total.append(i.string)
 
-        #取下包含了课表内容的源码, 取下分数内容
-        rows1 = self.soup.findAll('tr')[1:-3]
-        row2 = self.soup.findAll('tr')[-3]
-
-        for row in rows1:
-            columns = row.findAll('td')
-            for column in columns:
-                if column.text != '&nbsp' and column.text != '\xa0':
-                    gradePage.append(column.text)
-                else:
-                    gradePage.append(' ')
-
-        items = row2.findAll('b')
-        for item in items:
-            if item.text != '':
-                total.append(item.text)
+        #garde
+        grade_data = self.soup.findAll('table')[0].findAll('td')
+        grade_data1 = str(grade_data).replace('<td>', '').replace('</td>', '').replace(' ', '').replace('[', '').replace(']', '').split(',')
 
         #按科目拆开
         item = []
         grades = []
-        for i in range(len(gradePage)):
+        for i in range(len(grade_data1)):
             if (i+1)%20 == 0:
                 grades.append(item)
                 item = []
             else:
-                item.append(gradePage[i])
+                item.append(grade_data1[i])
 
         return (grades, total)
 
@@ -192,10 +166,11 @@ if __name__ == '__main__':
             #爬取课表
             classPage = spider.switchToSchedule()
             #解析课表
-            resolver = ResolvePage(classPage.text)
+            # resolver = ResolvePage(classPage.text)
+            resolver = ResolvePage(open('./source.html'))
             schedule = resolver.resolveSchedule()
             #显示课表
-            print("\n%s的课表:" % name)
+            # print("\n%s的课表:" % name)
             print('第%s学年 第%s学期' % (schedule[0], schedule[1]))
             scheduleTable = PrettyTable(['课名', '类型', '时间', '地点', '教师'])
             scheduleTable.align='l'
@@ -204,7 +179,7 @@ if __name__ == '__main__':
             print(scheduleTable)
             # print("课名\t\t\t类型\t\t时间\t\t\t地点\t教师")
             # for i in schedule[2]:
-                # print("%s\t\t%s\t%s\t%s\t%s" % (i[0],i[1],i[2],i[4],i[3]))
+            #    print("%s\t\t%s\t%s\t%s\t%s" % (i[0],i[1],i[2],i[4],i[3]))
         elif option == '2':
             year = input("请输入要查询的学年(如2017-2018): ")
             semester = input("请输入是%s学年的第几学期(如2): " % year)
@@ -218,12 +193,12 @@ if __name__ == '__main__':
             print('第%s学年 第%s学期' % (year, semester))
             gradeTable = PrettyTable(['课名', '类型', '绩点', '平时', '期末', '实验', '总评'])
             gradeTable.align='l'
-            for i in grades:
+            for i in grades[1:]:
                 gradeTable.add_row([i[3],i[4],i[7],i[8],i[10],i[11],i[12]])
             print(gradeTable)
             # print("课名\t\t\t类型\t\t\t绩点\t平时\t期末\t实验\t总评")
             # for i in grades:
-                # print("%s\t\t%s\t%s \t%s\t%s\t%s\t%s" % (i[3],i[4],i[7],i[8],i[10],i[11],i[12]))
+            #     print("%s\t\t%s\t%s \t%s\t%s\t%s\t%s" % (i[3],i[4],i[7],i[8],i[10],i[11],i[12]))
             print("综合情况:  %s,  %s,  %s" % (total[0],total[1],total[2]))
         else:
             print("无效选项")
