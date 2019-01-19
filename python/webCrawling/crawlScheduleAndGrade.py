@@ -5,6 +5,7 @@ import getpass  #用来输入不可见密码
 from prettytable import PrettyTable  #用来打印整齐的表格
 import re
 import requests
+import os
 from bs4 import BeautifulSoup
 from PIL import Image
 
@@ -31,13 +32,13 @@ class Crawling:
 
     def setLoginData(self, URL, headers):
         data = self.__originData
-        data['__VIEWSTATE'] = BeautifulSoup(self.session.get(URL, headers=headers).text, 'lxml').findAll('input')[0].get('value')  #解析得到'__VIEWSTATE'的值, 将'__VIEWDATE'的值加入字典
+        data['__VIEWSTATE'] = BeautifulSoup(self.session.get(URL, headers=headers).text, 'lxml').find('input', type='hidden', id=False).get('value')  #解析得到'__VIEWSTATE'的值, 将'__VIEWDATE'的值加入字典
         checkcode = self.session.get(self.checkcodeURL, headers=headers)  #获得验证码网页
         with open(self.checkcodePath, 'wb') as fp:  #保存验证码图片
             fp.write(checkcode.content)
-        checkcodeImg = Image.open(self.checkcodePath)
-        checkcodeImg.show()  #展示验证码
-        data['txtSecretCode'] = input("请输入图片中的验证码: ")  #获得手工输入的验证码, 将验证码加入数据字典中.  数据准备完毕
+        with Image.open(self.checkcodePath) as checkcodeImg:
+            checkcodeImg.show()  #展示验证码
+            data['txtSecretCode'] = input("请输入图片中的验证码: ")  #获得手工输入的验证码, 将验证码加入数据字典中.  数据准备完毕
         
         return data
     
@@ -46,7 +47,7 @@ class Crawling:
         data['ddlXN'] = year
         data['ddlXQ'] = semester
 
-        data['__VIEWSTATE'] = BeautifulSoup(self.session.get(URL, headers=headers).text, 'lxml').findAll('input')[0].get('value')  #解析得到'__VIEWSTATE'的值, 将'__VIEWDATE'的值加入字典
+        data['__VIEWSTATE'] = BeautifulSoup(self.session.get(URL, headers=headers).text, 'lxml').find('input', type='hidden', id=False).get('value')  #解析得到'__VIEWSTATE'的值, 将'__VIEWDATE'的值加入字典
 
         return data
 
@@ -63,7 +64,7 @@ class Crawling:
         homePage = self.session.post(loginPageURL, data=loginData, headers=loginHeaders)  #发出post请求(登录), 进入个人教务系统主页
 
         homePageSoup = BeautifulSoup(homePage.text, 'lxml')  #解析主页源码
-        targetURL = homePageSoup.findAll('a')[18].get('href')  #得到课表页网址, 其中有中文待处理
+        targetURL = homePageSoup.find(onclick="GetMc('课表查询');").get('href')  #得到课表页网址, 其中有中文待处理
         self.__name = re.search(r'[\u4e00-\u9fa5]{2,}', targetURL).group()  #正则匹配到中文
         self.__nameInURL = str(self.__name.encode('gb2312')).replace('\\x', '%').upper()[2:-1]  #将中文转换为地址
     
@@ -153,56 +154,63 @@ if __name__ == '__main__':
     #询问私人数据
     userName = input('请输入用户名: ')
     passward = getpass.getpass('请输入密码(输入过程字符不可见,输入完成按下回车即可): ')
-    #登录
-    spider = Crawling(userName, passward)
-    homePage = spider.login()
-    #拿到你的姓名
-    name = spider.getName()
+    try:
+        #登录
+        spider = Crawling(userName, passward)
+        homePage = spider.login()
+        #拿到你的姓名
+        name = spider.getName()
 
-    option = input("\n选项: 查课表输入1, 查成绩输入2, 输入q退出: ")
-
-    while option != 'q':
-        if option == '1':
-            #爬取课表
-            classPage = spider.switchToSchedule()
-            #解析课表
-            # resolver = ResolvePage(classPage.text)
-            resolver = ResolvePage(open('./source.html'))
-            schedule = resolver.resolveSchedule()
-            #显示课表
-            # print("\n%s的课表:" % name)
-            print('第%s学年 第%s学期' % (schedule[0], schedule[1]))
-            scheduleTable = PrettyTable(['课名', '类型', '时间', '地点', '教师'])
-            scheduleTable.align='l'
-            for i in schedule[2]:
-                scheduleTable.add_row([i[0],i[1],i[2],i[4],i[3]])
-            print(scheduleTable)
-            # print("课名\t\t\t类型\t\t时间\t\t\t地点\t教师")
-            # for i in schedule[2]:
-            #    print("%s\t\t%s\t%s\t%s\t%s" % (i[0],i[1],i[2],i[4],i[3]))
-        elif option == '2':
-            year = input("请输入要查询的学年(如2017-2018): ")
-            semester = input("请输入是%s学年的第几学期(如2): " % year)
-            #爬取成绩
-            gradePage = spider.switchToGrade(year, semester)
-            #解析成绩
-            resolver = ResolvePage(gradePage.text)
-            (grades, total) = resolver.resolveGradeContent()
-            #显示成绩
-            print("\n%s的成绩:" % name)
-            print('第%s学年 第%s学期' % (year, semester))
-            gradeTable = PrettyTable(['课名', '类型', '绩点', '平时', '期末', '实验', '总评'])
-            gradeTable.align='l'
-            for i in grades[1:]:
-                gradeTable.add_row([i[3],i[4],i[7],i[8],i[10],i[11],i[12]])
-            print(gradeTable)
-            # print("课名\t\t\t类型\t\t\t绩点\t平时\t期末\t实验\t总评")
-            # for i in grades:
-            #     print("%s\t\t%s\t%s \t%s\t%s\t%s\t%s" % (i[3],i[4],i[7],i[8],i[10],i[11],i[12]))
-            print("综合情况:  %s,  %s,  %s" % (total[0],total[1],total[2]))
-        else:
-            print("无效选项")
-        
         option = input("\n选项: 查课表输入1, 查成绩输入2, 输入q退出: ")
-   
-    print("\n已退出. 欢迎使用, 再见")
+
+        while option != 'q':
+            if option == '1':
+                #爬取课表
+                classPage = spider.switchToSchedule()
+                #解析课表
+                resolver = ResolvePage(classPage.text)
+                # resolver = ResolvePage(open('./source.html'))
+                schedule = resolver.resolveSchedule()
+                #显示课表
+                print("\n%s的课表:" % name)
+                print('第%s学年 第%s学期' % (schedule[0], schedule[1]))
+                scheduleTable = PrettyTable(['课名', '类型', '时间', '地点', '教师'])
+                scheduleTable.align='l'
+                for i in schedule[2]:
+                    scheduleTable.add_row([i[0],i[1],i[2],i[4],i[3]])
+                print(scheduleTable)
+                # print("课名\t\t\t类型\t\t时间\t\t\t地点\t教师")
+                # for i in schedule[2]:
+                #    print("%s\t\t%s\t%s\t%s\t%s" % (i[0],i[1],i[2],i[4],i[3]))
+            elif option == '2':
+                year = input("请输入要查询的学年(如2017-2018): ")
+                semester = input("请输入是%s学年的第几学期(如2): " % year)
+                #爬取成绩
+                gradePage = spider.switchToGrade(year, semester)
+                #解析成绩
+                resolver = ResolvePage(gradePage.text)
+                (grades, total) = resolver.resolveGradeContent()
+                #显示成绩
+                print("\n%s的成绩:" % name)
+                print('第%s学年 第%s学期' % (year, semester))
+                gradeTable = PrettyTable(['课名', '类型', '绩点', '平时', '期末', '实验', '总评'])
+                gradeTable.align='l'
+                for i in grades[1:]:
+                    gradeTable.add_row([i[3],i[4],i[7],i[8],i[10],i[11],i[12]])
+                print(gradeTable)
+                # print("课名\t\t\t类型\t\t\t绩点\t平时\t期末\t实验\t总评")
+                # for i in grades:
+                #     print("%s\t\t%s\t%s \t%s\t%s\t%s\t%s" % (i[3],i[4],i[7],i[8],i[10],i[11],i[12]))
+                print("综合情况:  %s,  %s,  %s" % (total[0],total[1],total[2]))
+            else:
+                print("无效选项")
+            
+            option = input("\n选项: 查课表输入1, 查成绩输入2, 输入q退出: ")
+       
+        print("\n已退出. 欢迎使用, 再见")
+    except:
+        print("\n网络开了点小差，已退出，请重试")
+    try:
+        os.system('rm %s' % spider.checkcodePath)
+    except:
+        pass
