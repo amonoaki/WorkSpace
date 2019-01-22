@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 Created on Wed Jan 31 19:24:05 2018
 
 @author: 23755
-"""
+'''
 import sys
 import math
 from PyQt5.QtWidgets import QWidget, QApplication, QGridLayout, QLabel, QPushButton
