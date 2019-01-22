@@ -1,4 +1,4 @@
-﻿#ifndef _QUEUE_H_
+#ifndef _QUEUE_H_
 #define _QUEUE_H_
 #include <stdbool.h>
 #include "binaryTree.h"

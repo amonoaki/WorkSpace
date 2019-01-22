@@ -1,4 +1,4 @@
-﻿/*二叉树接口*/
+/*二叉树接口*/
 
 #ifndef _BINARY_TREE_H_
 #define _BINARY_TREE_H_
@@ -42,6 +42,8 @@ bool TreeIsFull(const Tree *tree);
 bool TreeHasFull(const Tree *tree);
 //获得树的项数
 int TrnodesCount(const Tree *tree);
+//树的高度
+int GetHeight(const Tree *tree);
 //项在树里吗
 //bool InTree(const Tree *tree, Item item);
 

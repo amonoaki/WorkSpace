@@ -22,11 +22,11 @@ int main(void)
 
     readTreeFromFile(&tree);
 
-    printf("»¶Ó­À´µ½¶ş²æÊ÷²âÊÔÏµÍ³");
+    printf("æ¬¢è¿æ¥åˆ°äºŒå‰æ ‘æµ‹è¯•ç³»ç»Ÿ");
     help();
 
     do {
-        getInt(&option, "ÄãµÄÑ¡Ïî");
+        getInt(&option, "ä½ çš„é€‰é¡¹");
 
         switch (option) {
             case HELP: help(); break;
@@ -37,27 +37,28 @@ int main(void)
             case QUIT: quit = quitConfirm(); break;
 			case PRINT_TO_FILE: showTree(&tree, NULL); break;
 			case PRINT_TO_SCREEN: showTree(&tree, stdout); break;
-            default: printf("ÎŞĞ§Ñ¡Ïî\n"); break;
+            default: printf("æ— æ•ˆé€‰é¡¹\n"); break;
         }
     } while(!quit);
     DeleteAllTrnode(&tree);
-    printf("ÒÑÍË³ö\n");
+    printf("å·²é€€å‡º\n");
 
     return 0;
 }
 
-//´òÓ¡Êı¾İ
+//æ‰“å°æ•°æ®
 void printItems(const Tree *tree)
 {
     printf("\nname\t\t\t value\t\t Trnode\t\t\t left\t\t\t right\n\n");
     printTrnode(tree);
-    printf("¹²%dÌõ¼ÇÂ¼\n\n", TrnodesCount(tree));
+    printf("å…±%dæ¡è®°å½•", TrnodesCount(tree));
+    printf(", height:%d\n\n", GetHeight(tree));
 }
-//Ôö¼ÓÊı¾İ
+//å¢åŠ æ•°æ®
 void addItems(Tree *tree)
 {
     if (TreeIsFull(tree)) {
-        printf("¿Õ¼äÒÑÂú, ÎŞ·¨¼ÌĞøÊäÈë\n");
+        printf("ç©ºé—´å·²æ»¡, æ— æ³•ç»§ç»­è¾“å…¥\n");
         return;
     }
 
@@ -65,7 +66,7 @@ void addItems(Tree *tree)
     int value = 0;
     Item item;
 
-    printf("Ôö¼Ó: ÊäÈëname, value. ¿Õ¸ñ¸ô¿ª, # »Ø³µ ½áÊø\n");
+    printf("å¢åŠ : è¾“å…¥name, value. ç©ºæ ¼éš”å¼€, # å›è½¦ ç»“æŸ\n");
 
     scanf("%s", name);
     while (0 != strcmp(name, "#")) {
@@ -82,13 +83,13 @@ void addItems(Tree *tree)
     }
     saveTreeToFile(tree);
 }
-//²éÕÒÊı¾İ
+//æŸ¥æ‰¾æ•°æ®
 void searchItem(const Tree *tree)
 {
     char name[NAME_LENGTH];
     Trnode *pnode = NULL, *plast = NULL;
 
-    printf("²éÕÒ: ÊäÈëname:");
+    printf("æŸ¥æ‰¾: è¾“å…¥name:");
     scanf("%s", name);
     
     Item item;
@@ -99,15 +100,15 @@ void searchItem(const Tree *tree)
         printf("\nname\t\t\t value\t\t left\t\t\t right\n\n");
         printf("%-20s\t %-10d\t %-15p\t %-15p\n",(pnode->item).name, (pnode->item).value, pnode->left, pnode->right);
     } else {
-        printf("ÎŞ½á¹û\n");
+        printf("æ— ç»“æœ\n");
     }
 }
-//É¾³ıÊı¾İ
+//åˆ é™¤æ•°æ®
 void deleteItem(Tree *tree)
 {
     char name[NAME_LENGTH];
 
-    printf("É¾³ı: ÊäÈëname:");
+    printf("åˆ é™¤: è¾“å…¥name:");
     scanf("%s", name);
     
     Item item;
@@ -119,20 +120,20 @@ void deleteItem(Tree *tree)
     saveTreeToFile(tree);
 }
 
-//´òÓ¡ÌáÊ¾
+//æ‰“å°æç¤º
 void help()
 {
-    printf("¿ÉÓÃÑ¡Ïî: -1:ÍË³ö 0:ÏÔÊ¾°ïÖú 1:Ôö¼ÓÊı¾İ 2:ÏÔÊ¾Êı¾İ 3:²éÕÒÊı¾İ 4:É¾³ıÊı¾İ 5:Í¼ĞÎ»¯´òÓ¡Êı¾İµ½ÖÕ¶Ë 6:Í¼ĞÎ»¯´òÓ¡Êı¾İµ½ÎÄ¼ş\n");
+    printf("å¯ç”¨é€‰é¡¹: -1:é€€å‡º 0:æ˜¾ç¤ºå¸®åŠ© 1:å¢åŠ æ•°æ® 2:æ˜¾ç¤ºæ•°æ® 3:æŸ¥æ‰¾æ•°æ® 4:åˆ é™¤æ•°æ® 5:å›¾å½¢åŒ–æ‰“å°æ•°æ®åˆ°ç»ˆç«¯ 6:å›¾å½¢åŒ–æ‰“å°æ•°æ®åˆ°æ–‡ä»¶\n");
 }
-//ÍË³ö
+//é€€å‡º
 bool quitConfirm ()
 {
-    printf("È·ÈÏÍË³ö?[y/n]");
+    printf("ç¡®è®¤é€€å‡º?[y/n]");
     return confirm();
 }
 
 
-//´ÓÎÄ¼ş¶ÁÈ¡Êı¾İ data.txt
+//ä»æ–‡ä»¶è¯»å–æ•°æ® data.txt
 void readTreeFromFile(Tree *tree)
 {
     FILE *pdata = fopen("./data.txt", "a+");
@@ -152,10 +153,10 @@ void readTreeFromFile(Tree *tree)
     }
 
     fclose(pdata);
-    printf("Êı¾İ¶ÁÈ¡Íê±Ï, ¹²%dÌõ¼ÇÂ¼\n", TrnodesCount(tree));
+    printf("æ•°æ®è¯»å–å®Œæ¯•, å…±%dæ¡è®°å½•\n", TrnodesCount(tree));
 }
 
-//±£´æÊı¾İµ½ÎÄ¼ş data.txt
+//ä¿å­˜æ•°æ®åˆ°æ–‡ä»¶ data.txt
 static void saveTree(FILE *pdata, const Tree *tree)
 {
 
@@ -164,26 +165,26 @@ static void saveTree(FILE *pdata, const Tree *tree)
         return;
     }
 
-	//´´½¨ÁÙÊ±Ê÷×÷Îª²ÎÊıÊ÷µÄ¿½±´
+	//åˆ›å»ºä¸´æ—¶æ ‘ä½œä¸ºå‚æ•°æ ‘çš„æ‹·è´
 	Tree tempTree;
 	InitializeTree(&tempTree);
 	tempTree = *tree;
 
-	//¼ÇÂ¼ÁÙÊ±Ê÷µÄ¸ù½Úµã
+	//è®°å½•ä¸´æ—¶æ ‘çš„æ ¹èŠ‚ç‚¹
 	Trnode *p = tempTree.root;
 
-	//µİ¹é±éÀú
-	if (TreeHasEmpty(&tempTree)) {  //ÎŞÂ·¿É×ß,·µ»ØÉÏÒ»²ã
+	//é€’å½’éå†
+	if (TreeHasEmpty(&tempTree)) {  //æ— è·¯å¯èµ°,è¿”å›ä¸Šä¸€å±‚
         fprintf(pdata, "%s %d ",(p->item).name, (p->item).value);
 		return ;
 	} else {
-        //ÕâÀï±ØĞëÔÚµİ¹éÇ°´¦Àí, ´òÓ¡µÄË³ĞòÒªºÍµ±³õÊäÈëµÄË³ĞòÏàÍ¬, ·ñÔòÊ÷µÄ½á¹¹½«±»¸Ä±ä
+        //è¿™é‡Œå¿…é¡»åœ¨é€’å½’å‰å¤„ç†, æ‰“å°çš„é¡ºåºè¦å’Œå½“åˆè¾“å…¥çš„é¡ºåºç›¸åŒ, å¦åˆ™æ ‘çš„ç»“æ„å°†è¢«æ”¹å˜
         fprintf(pdata, "%s %d ",(p->item).name, (p->item).value);
-		if (p->left != NULL) {  //×ó±ßÓĞÂ·,Íù×ó×ß
+		if (p->left != NULL) {  //å·¦è¾¹æœ‰è·¯,å¾€å·¦èµ°
 			tempTree.root = p->left;
 		    saveTree(pdata, &tempTree);
 		}
-		if (NULL != p->right) {  //ÓÒ±ßÓĞÂ·,ÍùÓÒ×ß
+		if (NULL != p->right) {  //å³è¾¹æœ‰è·¯,å¾€å³èµ°
 			tempTree.root = p->right;
 			saveTree(pdata, &tempTree);
 		}
@@ -201,23 +202,23 @@ void saveTreeToFile(const Tree *tree)
 
 
 
-/*¹¤¾ß*/
-//»ñµÃÒ»¸öÕûÊı£¬´«ÈëÄ¿±ê±äÁ¿µØÖ·ºÍÌáÊ¾×Ö·û´®£¬½«×îºóÒ»´ÎscanfµÄ·µ»ØÖµ·µ»Ø
+/*å·¥å…·*/
+//è·å¾—ä¸€ä¸ªæ•´æ•°ï¼Œä¼ å…¥ç›®æ ‡å˜é‡åœ°å€å’Œæç¤ºå­—ç¬¦ä¸²ï¼Œå°†æœ€åä¸€æ¬¡scanfçš„è¿”å›å€¼è¿”å›
 static int getInt(int *tar, char *tip)
 {
     int statu;
 
-    printf("ÇëÊäÈë%s£º", tip);
-    while ((statu = scanf("%d", tar)) != 1) { //»ñµÃ·ûºÏÒªÇóµÄÊäÈëÎªÖ¹
-        printf("±§Ç¸£¬%c·Ç·¨¡£´Ë´¦ĞèÒªÒ»¸öÕûÊı¡£\n", getchar());
-        while (getchar() != '\n');  //ÏûºÄÊ£ÓàÕûĞĞ×Ö·û
-        printf("ÇëÊäÈë%s£º", tip);
+    printf("è¯·è¾“å…¥%sï¼š", tip);
+    while ((statu = scanf("%d", tar)) != 1) { //è·å¾—ç¬¦åˆè¦æ±‚çš„è¾“å…¥ä¸ºæ­¢
+        printf("æŠ±æ­‰ï¼Œ%céæ³•ã€‚æ­¤å¤„éœ€è¦ä¸€ä¸ªæ•´æ•°ã€‚\n", getchar());
+        while (getchar() != '\n');  //æ¶ˆè€—å‰©ä½™æ•´è¡Œå­—ç¬¦
+        printf("è¯·è¾“å…¥%sï¼š", tip);
     }
-    while (getchar() != '\n');  //ÏûºÄÊ£ÓàÕûĞĞ×Ö·û
+    while (getchar() != '\n');  //æ¶ˆè€—å‰©ä½™æ•´è¡Œå­—ç¬¦
 
     return statu;
 }
-//È·ÈÏÊÇ·ñÖ´ĞĞ²Ù×÷£¬ÓÃ»§ÊäÈëy·µ»Ø-1£¬·ñÔò·µ»Ø1
+//ç¡®è®¤æ˜¯å¦æ‰§è¡Œæ“ä½œï¼Œç”¨æˆ·è¾“å…¥yè¿”å›-1ï¼Œå¦åˆ™è¿”å›1
 static bool confirm()
 {
     char choice;

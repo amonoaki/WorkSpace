@@ -1,4 +1,4 @@
-﻿#ifndef _QUEUEQUEUE_H_
+#ifndef _QUEUEQUEUE_H_
 #define _QUEUEQUEUE_H_
 #include <stdbool.h>
 #include "queue.h"

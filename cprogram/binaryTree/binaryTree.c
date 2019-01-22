@@ -1,4 +1,4 @@
-﻿#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 
 /*二叉树实现*/
 
@@ -67,6 +67,24 @@ bool TreeIsFull(const Tree *tree)
 int TrnodesCount(const Tree *tree)
 {
 	return tree->total;
+}
+
+int height = 0;
+void traverseGetHeight(const Trnode *p, int *level)
+{
+    if (p == NULL) return;
+    *level += 1;
+    if (*level > height) height = *level;
+    traverseGetHeight(p->left, level);
+    traverseGetHeight(p->right, level);
+    *level -= 1;
+}
+int GetHeight(const Tree *tree)
+{
+    int level = 0;
+    height = 0;
+    traverseGetHeight(tree->root, &level);
+    return height;
 }
 
 /*增加节点*/
