@@ -1,6 +1,8 @@
 #mylock.py
 #手写数字识别密码锁-神经网络-机器学习
 
+import gzip
+import pickle
 import os
 import numpy as np
 import cv2
@@ -12,6 +14,26 @@ NUMBER_COUNT = 10
 TRY_TIMES = 5
 PASSWARD = [2, 3, 5, 7]
 drawing=False
+
+def load_image(opt):
+    f = gzip.open("mnist.pkl.gz", 'rb')  #加载数据
+    train, valid, test = pickle.load(f, encoding='bytes')
+    f.close()
+    X, y = train
+    u = np.unique(y)  #去除重复值
+    coords = {}
+    for idx in range(len(u)):
+        coords[str(u[idx])] = idx
+    Y = np.zeros((len(y), len(u)))
+    for idx in range(len(y)):
+        Y[idx, coords[str(y[idx])]] = 1
+    # return X, Y
+    if opt == 'train':
+        return X[:37500], Y[:37500]
+    elif opt == 'test':
+        return X[37500:], Y[37500:]
+    else:
+        print('Invalid option.')
 
 
 def drawCircle(event,x,y,flags,param):
@@ -55,8 +77,10 @@ def getArray(image_name, image_count, image, label):
 
 def learning():
     ##监督学习，训练参数##
-    (trainimage_name, image_count, trainimage, trainlabel) = arrayInitialize("0-5999")
-    (trainimage, trainlabel) = getArray(trainimage_name, image_count, trainimage, trainlabel)
+    # (trainimage_name, image_count, trainimage, trainlabel) = arrayInitialize("0-5999")
+    # (trainimage, trainlabel) = getArray(trainimage_name, image_count, trainimage, trainlabel)
+    (trainimage, trainlabel) = load_image('train')
+    image_count = trainimage.shape[0]
     #初始化权重数组和偏置量(随机数)
     W = np.random.random((PIXEL_COUNT, NUMBER_COUNT))  #W.shape = (PIXEL_COUNT, NUMBER_COUNT)
     b = np.random.random((1, NUMBER_COUNT))  #b.shape = (1, NUMBER_COUNT)
@@ -68,10 +92,11 @@ def learning():
         A = temp0 / temp1  #a.shape = (image_count, NUMBER_COUNT)
 
         #处理损失函数的一个参数
-        Yij = np.zeros([image_count, NUMBER_COUNT])  #Yij.shape = (image_count, NUMBER_COUNT)
-        for i in range(image_count):
-            temp2 = int(trainlabel[i][0])  #暂存每行对应的正确数字
-            Yij[i][temp2] = 1
+        # Yij = np.zeros([image_count, NUMBER_COUNT])  #Yij.shape = (image_count, NUMBER_COUNT)
+        # for i in range(image_count):
+            # temp2 = int(trainlabel[i][0])  #暂存每行对应的正确数字
+            # Yij[i][temp2] = 1
+        Yij = trainlabel
 
         sum_dW = np.zeros([PIXEL_COUNT, NUMBER_COUNT])
         sum_db = np.zeros([1, NUMBER_COUNT])
@@ -90,7 +115,7 @@ def learning():
 
     return (W, b)
 
-
+''''
 if __name__ == '__main__':
 
     #获得学习后的参数并加以存储
@@ -98,8 +123,10 @@ if __name__ == '__main__':
     #np.save("E:\\BISTU\\TeamWater\\water项目-手写密码锁\\第三周\\W", W)
     #np.save("E:\\BISTU\\TeamWater\\water项目-手写密码锁\\第三周\\b", b)
     #读取学习过的参数
-    W = np.load("E:\\BISTU\\TeamWater\\water项目-手写密码锁\\第三周\\W.npy")
-    b = np.load("E:\\BISTU\\TeamWater\\water项目-手写密码锁\\第三周\\b.npy")
+    # W = np.load("E:\\BISTU\\TeamWater\\water项目-手写密码锁\\第三周\\W.npy")
+    # b = np.load("E:\\BISTU\\TeamWater\\water项目-手写密码锁\\第三周\\b.npy")
+    W = np.load("./W.npy")
+    b = np.load("./b.npy")
 
     #准备窗口与提示
     img=np.zeros((280,280),np.uint8) + 255
@@ -151,7 +178,8 @@ if __name__ == '__main__':
                     break
             if (count == len(PASSWARD)):
                 print("Correct! Enjoy your game!")
-                os.system("python E:\\WorkSpace\\python\\gobang\\gobang.py")
+                # os.system("python E:\\WorkSpace\\python\\gobang\\gobang.py")
+                os.system("python3 ../../gobang/gobang.py")
                 break
             else:
                 print("Passwards do not match, try again.(%s chance(s) left)" % (TRY_TIMES-1 - i))
@@ -160,14 +188,16 @@ if __name__ == '__main__':
 
     print("Bye!")
 #end
-
-
-
 '''
+
+
+
 if __name__ == '__main__':
     ##批量数据测试##
-    (testimage_name, image_count, testimage, testlabel) = arrayInitialize("6000-6999")
-    (testimage, testlabel) = getArray(testimage_name, image_count, testimage, testlabel)
+    # (testimage_name, image_count, testimage, testlabel) = arrayInitialize("6000-6999")
+    # (testimage, testlabel) = getArray(testimage_name, image_count, testimage, testlabel)
+    (testimage, testlabel) = load_image('test')
+    image_count = testimage.shape[0]
     (W, b) = learning()
 
     #计算
@@ -189,4 +219,3 @@ if __name__ == '__main__':
         if testlabel[i][0] == predictlabel[i]:
             right_count += 1
     print("识别率:%s" % (right_count/image_count))
-'''
