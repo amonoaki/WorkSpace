@@ -1,48 +1,62 @@
-#录屏(GUI)
+#### Ubuntu 常用操作
+
+**录屏(GUI)**
 	simple-screen-recorder
-#音频pcm与wav互转
+
+**音频pcm与wav互转**
 	wav转pcm: ffmpeg -i input.wav -f s16be -ar 8000 -acodec pcm_s16be output.raw
 	pcm转wav: ffmpeg -f s16be -ar 8000 -ac 2 -acodec pcm_s16be -i input.raw output.wav
-#pip命令
-	报错一：提示"Could not install packages due to an EnvironmentError: Missing dependencies for SOCKS support."
-	解决：  让终端不走代理，即每次都将环境变量all_proxy和ALL_PROXY重置(可写入.bashrc里)
-	    	让终端始终走代理(推荐，因为下载一些东西的速度会快得多，例如pip下载numpy)，即安装好pysocks(遇到上一个问题可参考上面解决办法解决)，然后修改.bashrc文件，添加"export all_proxy=socks5://127.0.0.1:1080"和"export ALL_PROXY=socks5://127.0.0.1:1080"
-	报错二：提示权限不够，建议检查权限或者增加--user参数
-	解决：  在install的后面增加--user参数，后面不需要跟用户名【每次都要，别忘记】
-#at 设置定时任务
+
+**pip命令**
+- 报错一：提示"Could not install packages due to an EnvironmentError: Missing dependencies for SOCKS support."
+- 解决：  
+ - 让终端不走代理，即每次都将环境变量all_proxy和ALL_PROXY重置(可写入.bashrc里)
+ - 让终端始终走代理(推荐，因为下载一些东西的速度会快得多，例如pip下载numpy)，即安装好pysocks(遇到上一个问题可参考上面解决办法解决)，然后修改.bashrc文件，添加"export all_proxy=socks5://127.0.0.1:1080"和"export ALL_PROXY=socks5://127.0.0.1:1080"
+- 报错二：提示权限不够，建议检查权限或者增加--user参数
+- 解决：  在install的后面增加--user参数，后面不需要跟用户名【每次都要，别忘记】
+
+**at 设置定时任务**
     at 后面加时间如(now+30minutes),然后会进入at的交互界面,在交互界面里输入到时要执行的任务如(echo "hello" > hello.txt), 每行命令一次执行. 按Ctrl-d保存退出.
     注意:如果命令涉及图形界面显示如(运行一个GUI程序),则要指定显示器, 即在执行命令前将指示显示器的环境变量改为当前显示屏(export DISPLAY=:1), 如(export DISPLAY=:1 && /home/ubuntu/alarm.py "测试")
-         并且, 系统休眠等命令需要在root用户下才能正常执行
+    并且, 系统休眠等命令需要在root用户下才能正常执行
     将at命令写进脚本: 使用管道, 将at要执行的命令以字符串的形式通过管道 echo 过去, 如(echo "echo '123' > test.txt" | at now+1minute)
 
-#wc 统计文件里面有多少单词，多少行，多少字符。
+**wc 统计文件里面有多少单词，多少行，多少字符**
     -l  ：仅列出行；     -w  ：仅列出多少字(英文单字)；     -m  ：多少字符；
-#gcc 编译代码时
+
+**gcc 编译代码时**
     如果代码include了数学库, 要加选项 -lm , 如果要使用 gdb 进行调试, 在编译的时候要加 -g 选项
-#命令行更换壁纸:
+
+**命令行更换壁纸**
     gsettings set org.gnome.desktop.background picture-uri 'file:/...'
     gsettings get org.gnome.desktop.background picture-uri 回车看到的是当前使用壁纸的路径
-#文件所有组所有者管理
+
+**文件所有组所有者管理**
     hown命令来改变文件所有者及用户组，chgrp命令来改变文件所在用户组, 格式: chown [-R] 账号名称:用户组名称 文件或目录; chgrp 类似
 
-
-#crontab循环任务设置: 
+**crontab循环任务设置**
     可以把脚本放在/etc/cron.hourly、/etc/cron.daily、/etc/cron.weekly、/etc/cron.monthly目录中，让它每小时/天/星期、月执行一次。
-#创建链接(软连接, 硬链接)
+
+**创建链接(软连接, 硬链接)**
     ln -s source dist        # 建立软连接
     ln source dist            # 建立硬连接
-#dpkg安装软件包(如.deb)
+
+**dpkg安装软件包(如.deb)**
     dpkg -i packagename.deb
-#解压.tar.gz结尾的压缩包:
+
+**解压.tar.gz结尾的压缩包**
     tar -xzf file.tar.gz
-#正则匹配汉字
+
+**正则匹配汉字**
     [\u4e00-\u9fa5]{2,}   #将匹配 2 个以上的汉字
     re.match(r'正则', '字符串') re.search(正则, 字符串)   #match从开头匹配,开头不对则返回空
-#休眠命令
+
+**休眠命令**
     pm-suspend  #root用户下
-#Bash快捷键
-    https://github.com/hokein/Wiki/wiki/Bash-Shell%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE
-    移动光标
+
+**Bash快捷键**
+[原文链接](https://github.com/hokein/Wiki/wiki/Bash-Shell%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE)
+- 移动光标
     ctrl+b: 前移一个字符(backward)
     ctrl+f: 后移一个字符(forward)
     alt+b: 前移一个单词
@@ -50,7 +64,7 @@
     ctrl+a: 移到行首（a是首字母）
     ctrl+e: 移到行尾（end）
     ctrl+xx: 行首到当前光标替换
-    编辑命令
+- 编辑命令
     alt+.: 粘帖最后一次命令最后的参数（通常用于mkdir long-long-dir后, cd配合着alt+.）
     alt+d: 删除当前光标到临近右边单词开始(delete)
     ctrl+w: 删除当前光标到临近左边单词结束(word)
@@ -61,7 +75,7 @@
     ctrl+l: 清屏
     ctrl+shift+c: 复制（相当于鼠标左键拖拽）
     ctrl+shift+v: 粘贴（相当于鼠标中键）
-    其它
+- 其它
     ctrl+n: 下一条命令
     ctrl+p: 上一条命令
     alt+n: 下一条命令（例如输入ls, 然后按'alt+n', 就会找到历史记录下的ls命令）
@@ -70,42 +84,52 @@
     shift+PageDown: 向下翻页
     ctrl+r: 进入历史查找命令记录， 输入关键字。 多次按返回下一个匹配项
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
 -------------------------------------------------------------------------------------------------------------------
-#vim命令备忘:
-#运行vimtutor
-    1. VIM插件安装: 找到该插件的GitHub的URL,将https://github.com后面的地址 xxx/yyy 作为Plugin参数写入~/.vimrc文件中. 有前例参照; 然后启动vim, 命令模式下输入  :PluginInstall  开始安装.符号  >  指示正在安装的插件, 符号  +  指示刚安装完毕的插件.
-    2. vim窗口分割: sp 上下分割, vsp 左右分割;
-       Ctrl-w 加方向键(h, j, k, l或方向控制键)跳转界面;
-       Ctrl-w 加 r 互换两个同一列两个分窗口的位置, Ctrl-w 加 x 互换同一行两个分窗口位置
-       Ctrl-w 加 + -改变字体大小(注意: + 要用shift才能输出)
-       Ctrl-w 加 < 或 > 增加减少宽度, Ctrl+w 加 = 所有窗口改为同等大小
-    3. 命令模式下, u 代表撤销, Ctrl-r 代表恢复(反撤销)
-    4. 命令模式下<F7>开关文件树, 命令模式下符号 ; 加 i 开关缩进的可视化显示, 命令模式下 ;+cc 行注释, ;+cu 取消注释, ;+cs 优美的注释, ;+cm 只用一组符号注释, ;+cy 注释并复制 (其中, 符号;为自定义的<leader>键,默认为符号\)
-    5. :set paste 进入粘贴模式, 进入插入模式后开始粘贴. :set nopaste 取消粘贴模式. 这可以避免在粘贴时缩进层层递进的混乱情况
-    6. vim多标签: tabnew <文件名>新标签页编辑文件. tabs显示已经打开的标签页列表, > 指示当前页面, + 标记页面被更改. tabc关闭当前标签页, tabo关闭所有标签页
-                  tabn或gt移动到下一个标签页, tabp或gT移动到上一个标签页
-                  set showtabline=[1,2,3]  标签页在窗口上方显示标签栏。=0完全不显示标签栏，=1只有用户新建时才显示，=2总是显示标签栏。
-                  tabm [次序]  移动当前文件的标签页次序。比如:tabm 1将把当前标签页移动到第2的位置。如:tabm不指定参数将被移动到最后。
+#### vim命令备忘:
+
+**运行vimtutor**
+
+**VIM插件安装**
+找到该插件的GitHub的URL,将https://github.com后面的地址 xxx/yyy 作为Plugin参数写入~/.vimrc文件中. 有前例参照; 然后启动vim, 命令模式下输入  :PluginInstall  开始安装.符号  >  指示正在安装的插件, 符号  +  指示刚安装完毕的插件.
+
+**vim窗口分割**
+- sp 上下分割, vsp 左右分割;
+- Ctrl-w 加方向键(h, j, k, l或方向控制键)跳转界面;
+- Ctrl-w 加 r 互换两个同一列两个分窗口的位置, Ctrl-w 加 x 互换同一行两个分窗口位置
+- Ctrl-w 加 + -改变字体大小(注意: + 要用shift才能输出)
+- Ctrl-w 加 < 或 > 增加减少宽度, Ctrl+w 加 = 所有窗口改为同等大小
+
+**命令模式下, u 代表撤销, Ctrl-r 代表恢复(反撤销)**
+
+**快捷键**
+- 命令模式下<F7>开关文件树
+- 命令模式下符号 ; 加 i 开关缩进的可视化显示
+- 命令模式下 ;+cc 行注释, ;+cu 取消注释, ;+cs 优美的注释, ;+cm 只用一组符号注释, ;+cy 注释并复制 (其中, 符号;为自定义的<leader>键,默认为符号\)
+
+**粘贴模式**
+:set paste 进入粘贴模式, 进入插入模式后开始粘贴. :set nopaste 取消粘贴模式. 这可以避免在粘贴时缩进层层递进的混乱情况
+
+**vim多标签:**
+- tabnew <文件名>新标签页编辑文件.
+- tabs显示已经打开的标签页列表, > 指示当前页面, + 标记页面被更改.
+- tabc关闭当前标签页, tabo关闭所有标签页, tabn或gt移动到下一个标签页, tabp或gT移动到上一个标签页
+- set showtabline=[1,2,3]  标签页在窗口上方显示标签栏。=0完全不显示标签栏，=1只有用户新建时才显示，=2总是显示标签栏。
+- tabm [次序]  移动当前文件的标签页次序。比如:tabm 1将把当前标签页移动到第2的位置。如:tabm不指定参数将被移动到最后。
  
-    7. vim和shell切换
-        :shell 不关闭vi切换到命令行
-        :exit  从shell回到vim   
-    8. vim跨文件复制粘贴: 命令模式下输入  "a  后面跟上如yy等复制操作, 在另一个文件中命令模式下输入  "a  后面跟上如p等粘贴操作即可
-    9. vim内容复制到系统剪贴板, 使用    " + 字母     作为此次内容的标记
+**vim和shell切换**
+- :shell 不关闭vi切换到命令行
+- :exit  从shell回到vim   
+
+**vim跨文件复制粘贴:**
+命令模式下输入  "a  后面跟上如yy等复制操作, 在另一个文件中命令模式下输入  "a  后面跟上如p等粘贴操作即可
+
+**vim内容复制到系统剪贴板**
+使用    " + 字母     作为此次内容的标记
+
+**vim 返回光标上/下一处所在位置**
+- Ctrl-I
+- Ctrl-O
+
+
 -------------------------------------------------------------------------------------------------------------------
 
