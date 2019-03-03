@@ -17,16 +17,10 @@ class Tools(object):
         f = gzip.open(path, 'rb')  #加载数据
         train, valid, test = pickle.load(f, encoding='bytes')
         f.close()
-        X, y = train
-        u = numpy.unique(y)  #去除重复值
-        coords = {}
-        for idx in range(len(u)):
-            coords[str(u[idx])] = idx
-        Y = numpy.zeros((len(y), len(u)))
-        for idx in range(len(y)):
-            Y[idx, coords[str(y[idx])]] = 1
+        X, Y = train
         return X, Y
 
+    @staticmethod
     def loadLocalImageSet(opt, path='/media/ubuntu/DT/BISTU/请转至onedrive/TeamWater/water项目-手写密码锁/第二周/0_1/'):
         '''
         opt = "train": 读取训练集

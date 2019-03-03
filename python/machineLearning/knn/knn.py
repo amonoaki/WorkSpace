@@ -23,12 +23,23 @@ class Knn(object):
         predict = []
         for row in test:
             rows = np.repeat(np.expand_dims(row, axis=0), train.shape[0], axis=0)
-            indices = np.argsort(np.sum(np.power(train - rows, 2), axis=1))  #有小到大的索引
-            s = 0
-            for i in range(self.K):  #得出预测值
-                s += train_label[indices[i]]
-            predict.append(1 if s > self.K//2 else 0)
-        rate = 1 - sum(abs(test_label-predict))/len(test)
+            indices = np.argsort(np.sum(np.power(train - rows, 2), axis=1))  #距离从小到大排序对应的索引
+            count_dict={}
+            for i in range(self.K):  #对最近的标签计数
+                label = train_label[indices[i]]
+                value = count_dict.setdefault(label, 0)
+                count_dict[label] = value+1
+            # print('count_dict:', count_dict)
+            predict.append(sorted(count_dict.items(), key = lambda kv: kv[1])[-1][0])  #记录预测值，注意：从小到大排列，所以这里应该取最后一个键
+        
+        cnt = 0
+        for i in range(len(test)):
+            if test_label[i] == predict[i]:
+                cnt += 1
+        rate = cnt/len(test_label)
+        # print(test_label[:20])
+        # print(predict[:20])
+        # print('rate:', rate)
         return rate
 
     def predict(self, train, train_label, test):
@@ -37,28 +48,25 @@ class Knn(object):
         train_label: 得出二分类结果并返回
         '''
         pass
-    
-def loadData(path='data.npz'):
-    '''加载自制数据集'''
-    if not os.path.isfile(path):
-        train, train_label = Tools.loadLocalImageSet('train')
-        test, test_label = Tools.loadLocalImageSet('test')
-        np.savez(path, train=train, train_label=np.array(train_label), test=test, test_label=np.array(test_label))
-        return train, train_label, test, test_label
-    else:
-        data = np.load(path)
-        return data['train'], data['train_label'], data['test'], data['test_label']
 
 def findK():
     '''寻找最佳的K值'''
-    train, train_label, test, test_label = loadData()
-    for i in range(1, 200, 2):
+    X, Y = Tools.loadMnist('../data/mnist.pkl.gz')
+    # train, train_label, test, test_label = X[:1000], Y[:1000], X[1000:1500], Y[1000:1500]
+    train, train_label, test, test_label = X[:500], Y[:500], X[500:750], Y[500:750]
+    for i in range(1, 50, 2):
         knn = Knn(i)
-        rate = knn.predictBatch(train, train_label, test, test_label)
+        rate = knn.predictBatch(train, train_label.tolist(), test, test_label.tolist())
         print('k=', i, "rate=", rate)
 
-if __name__ == "__main__":
-    train, train_label, test, test_label = loadData()
-    knn = Knn(11)  #通过findK()找到
-    rate = knn.predictBatch(train, train_label, test, test_label)
-    print("rate=", rate)
+def main():
+    '''主方法'''
+    X, Y = Tools.loadMnist('../data/mnist.pkl.gz')
+    train, train_label, test, test_label = X[:1000], Y[:1000], X[1000:1500], Y[1000:1500]
+    knn = Knn(10)
+    rate = knn.predictBatch(train, train_label.tolist(), test, test_label.tolist())
+    print('rate:', rate)
+
+if __name__ == '__main__':
+    # findK()
+    main()
