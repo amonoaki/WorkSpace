@@ -31,11 +31,11 @@ WorkSpace/
             |
             |----Hello (HelloWorld代码)
             |
-            |----MyEditor (一个GUI文本编辑器)
+            |----MyEditor (一个GUI文本编辑器的尝试)
         |
         |----python/
             |
-            |----calculator (一个GUI计算器)
+            |----calculator (一个GUI计算器的尝试)
             |
             |----gobang (一个五子棋游戏，题目来源于一位计科好友的假期练手)
             |
@@ -44,6 +44,10 @@ WorkSpace/
             |----machineLearning/ (机器学习相关项目)
                 |
                 |----mylock/ (手写数字识别密码锁(与五子棋组合)(仓库中只有代码不含训练与测试数据))
+                |
+                |----knn/ (KNN 最近邻算法)
+                |
+                |----k-means/ (K-Means 聚类算法)
             |
             |----opencv (OpenCV图片、摄像头图像读取[及膨胀与腐蚀])
             |
