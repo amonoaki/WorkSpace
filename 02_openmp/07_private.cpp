@@ -6,19 +6,19 @@ int main() {
   {
 #pragma omp for private(a)
     for(int i=0; i<4; i++)
-      printf("%d ",++a);
+      printf("a=%d ",++a);
 #pragma omp single
     printf("\n");
 #pragma omp for firstprivate(b)
     for(int i=0; i<4; i++)
-      printf("%d ",++b);
+      printf("b=%d ",++b);
 #pragma omp single
     printf("\n");
 #pragma omp for lastprivate(c)
     for(int i=0; i<4; i++)
-      printf("%d ",++c);
+      printf("c=%d ",++c);
 #pragma omp single
     printf("\n");
   }
-  printf("%d %d %d\n",a,b,c);
+  printf("a= %d b= %d c= %d\n",a,b,c);
 }
